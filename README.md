@@ -500,10 +500,28 @@ Production:
 
 This script will:
 
-- create/update forum categories and boards for `VictoriaPark.io`
+- create/update forum categories and boards for `VictoriaPark.io` (Simplified Chinese taxonomy)
 - ensure groups: `TRUSTED`, `BOARD_MODERATORS`
 - apply group/forum permissions for guest, registered, trusted, moderator, and admin scopes
 - set baseline registration and anti-spam controls
+
+Default seeded boards (15):
+
+- `百家论坛`（含人气指标：`60.25金币（第10名）`）
+- `军事纵横`
+- `经济观察`
+- `谈股论金`
+- `股票投资`
+- `娱乐八卦`
+- `笑口常开`
+- `生活百态`
+- `婚姻家庭`
+- `文化长廊`
+- `网际谈兵`
+- `史海钩沉`
+- `自由文学`
+- `体坛纵横`
+- `电脑前线 / 数码家电`
 
 Detailed matrix and SOP: `docs/forum_governance.md`.
 
@@ -515,6 +533,9 @@ This repo includes `ext/vpark/glue`:
 - Footer portal links (`门户 | 城市分区`)
 - Topic page `Summary/摘要` button to `VPARK_PORTAL_URL/topic/{topic_id}`
 - Session validation endpoint: `/ext/vpark/session_validate`
+- Home page top ad placeholder (reserved for paid ads)
+- Sub-page top ad placeholder (reserved for paid ads)
+- Home page forum directory panel listing key board titles with direct links
 
 Enable and verify:
 

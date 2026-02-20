@@ -28,4 +28,10 @@ $lang = array_merge($lang, array(
 	'VPARK_LANG_FR' => 'FRENCH',
 	'VPARK_LANG_ES' => 'SPANISH',
 	'VPARK_LANG_EN_GB' => 'ENGLISH GB',
+	'VPARK_FORUM_PANEL_TITLE' => '维园社区论坛导航',
+	'VPARK_FORUM_PANEL_SUBTITLE' => '一键进入重点版面（全部为简体中文社区）。',
+	'VPARK_AD_SLOT_HOME_TITLE' => '首页广告位（预留）',
+	'VPARK_AD_SLOT_HOME_DESC' => '此区域预留给后续付费商业广告投放。',
+	'VPARK_AD_SLOT_SUB_TITLE' => '子页面广告位（预留）',
+	'VPARK_AD_SLOT_SUB_DESC' => '论坛子页面广告展示位，后续可接入商业广告。',
 ));

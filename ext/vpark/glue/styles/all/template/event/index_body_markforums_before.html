@@ -1,0 +1,15 @@
+<div class="vpark-forum-panel">
+	<h3 class="vpark-forum-panel__title">{{ lang('VPARK_FORUM_PANEL_TITLE') }}</h3>
+	<p class="vpark-forum-panel__subtitle">{{ lang('VPARK_FORUM_PANEL_SUBTITLE') }}</p>
+	<ul class="vpark-forum-panel__grid">
+		{% for forum in vpark_forum_panel %}
+			<li class="vpark-forum-panel__item">
+				<a class="vpark-forum-panel__item-title" href="{{ forum.U_FORUM }}">{{ forum.TITLE }}</a>
+				<div class="vpark-forum-panel__item-subtitle">{{ forum.SUBTITLE }}</div>
+				{% if forum.METRIC %}
+					<span class="vpark-forum-panel__metric">{{ forum.METRIC }}</span>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+</div>

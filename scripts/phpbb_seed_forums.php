@@ -392,74 +392,180 @@ function apply_security_config(): void
 	}
 }
 
+function hide_legacy_sample_forums(array $group_ids, int $role_forum_noaccess): void
+{
+	global $db;
+
+	$legacy_names = array('Your first category', 'Your first forum');
+	$sql = 'SELECT forum_id
+		FROM ' . FORUMS_TABLE . '
+		WHERE ' . $db->sql_in_set('forum_name', $legacy_names);
+	$result = $db->sql_query($sql);
+	$legacy_forum_ids = array();
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$legacy_forum_ids[] = (int) $row['forum_id'];
+	}
+	$db->sql_freeresult($result);
+
+	if (empty($legacy_forum_ids))
+	{
+		return;
+	}
+
+	$groups_to_hide = array(
+		(int) $group_ids['guests'],
+		(int) $group_ids['registered'],
+		(int) $group_ids['newly_registered'],
+		(int) $group_ids['trusted'],
+		(int) $group_ids['board_moderators'],
+	);
+
+	$sql = 'DELETE FROM ' . ACL_GROUPS_TABLE . '
+		WHERE ' . $db->sql_in_set('forum_id', $legacy_forum_ids) . '
+			AND ' . $db->sql_in_set('group_id', $groups_to_hide);
+	$db->sql_query($sql);
+
+	$insert_rows = array();
+	foreach ($legacy_forum_ids as $forum_id)
+	{
+		foreach ($groups_to_hide as $group_id)
+		{
+			$insert_rows[] = array(
+				'group_id'			=> $group_id,
+				'forum_id'			=> $forum_id,
+				'auth_option_id'	=> 0,
+				'auth_role_id'		=> $role_forum_noaccess,
+				'auth_setting'		=> 0,
+			);
+		}
+	}
+
+	if (!empty($insert_rows))
+	{
+		$db->sql_multi_insert(ACL_GROUPS_TABLE, $insert_rows);
+	}
+
+	$sql = 'UPDATE ' . FORUMS_TABLE . '
+		SET display_on_index = 0,
+			forum_status = ' . ITEM_LOCKED . '
+		WHERE ' . $db->sql_in_set('forum_id', $legacy_forum_ids);
+	$db->sql_query($sql);
+}
+
 $forum_plan = array(
 	array(
-		'name'				=> '生活与移民 | Life Abroad & Immigration',
-		'description'		=> '海外生活经验、教育工作与家庭互助交流。',
-		'aliases'			=> array('Your first category'),
-		'guest_readable'	=> false,
-		'boards'			=> array(
-			array(
-				'name'				=> '海外生活 | Life Abroad',
-				'description'		=> '衣食住行、亲子教育、职场与本地生活见闻。',
-				'aliases'			=> array('Your first forum'),
-				'guest_readable'	=> false,
-			),
-			array(
-				'name'				=> '移民签证 | Immigration',
-				'description'		=> '签证路径、身份转换、政策解读与申请经验分享。',
-				'guest_readable'	=> false,
-			),
-		),
-	),
-	array(
-		'name'				=> '时政与观点 | Current Affairs',
-		'description'		=> '全球热点、国际关系与公共议题讨论。',
+		'name'				=> '热点讨论区',
+		'description'		=> '综合时政、社会公共议题与国际军事话题。',
+		'aliases'			=> array('时政与观点 | Current Affairs', 'Your first category'),
 		'guest_readable'	=> true,
 		'boards'			=> array(
 			array(
-				'name'				=> '时事政经 | Current Affairs',
-				'description'		=> '欢迎理性讨论时政新闻、社会议题与政策影响。',
-				'guest_readable'	=> true,
-			),
-		),
-	),
-	array(
-		'name'				=> '科技与投资 | Tech & Investment',
-		'description'		=> '技术趋势、数字产品、投资策略与风险管理。',
-		'guest_readable'	=> true,
-		'boards'			=> array(
-			array(
-				'name'				=> '科技数码 | Tech',
-				'description'		=> 'AI、软件、硬件、开发工具与前沿科技讨论。',
+				'name'				=> '百家论坛',
+				'description'		=> '综合时政 / 社会 / 观点的大讨论场。人气股价 60.25金币（第10名）。',
+				'aliases'			=> array('时事政经 | Current Affairs', 'Your first forum'),
 				'guest_readable'	=> true,
 			),
 			array(
-				'name'				=> '投资理财 | Investment',
-				'description'		=> '股票、基金、宏观市场与资产配置交流。',
+				'name'				=> '军事纵横',
+				'description'		=> '军事、地缘政治与战争热点讨论。',
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '经济观察',
+				'description'		=> '宏观经济、政策变化与经济新闻评论。',
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '网际谈兵',
+				'description'		=> '国际关系、政治军事的延伸讨论。',
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '史海钩沉',
+				'description'		=> '历史考据、旧闻梳理与史料交流。',
 				'guest_readable'	=> true,
 			),
 		),
 	),
 	array(
-		'name'				=> '文化文娱与社区 | Culture & Community',
-		'description'		=> '文化传承、娱乐八卦与社区交易信息。',
+		'name'				=> '财经投资区',
+		'description'		=> '股票交易、投资策略与市场复盘讨论。',
+		'aliases'			=> array('科技与投资 | Tech & Investment'),
 		'guest_readable'	=> true,
 		'boards'			=> array(
 			array(
-				'name'				=> '文化历史 | Culture',
-				'description'		=> '中文文化、历史、文学影视与跨文化交流。',
+				'name'				=> '谈股论金',
+				'description'		=> '股市行情、交易策略与投资心态交流。',
 				'guest_readable'	=> true,
 			),
 			array(
-				'name'				=> '八卦娱乐 | Gossip / Entertainment',
-				'description'		=> '明星动态、综艺影视与轻松话题讨论。',
+				'name'				=> '股票投资',
+				'description'		=> '偏实操的股票分析、选股与仓位讨论。',
+				'aliases'			=> array('投资理财 | Investment'),
+				'guest_readable'	=> true,
+			),
+		),
+	),
+	array(
+		'name'				=> '生活娱乐区',
+		'description'		=> '生活经验、家庭关系、体育与娱乐轻内容。',
+		'aliases'			=> array('生活与移民 | Life Abroad & Immigration'),
+		'guest_readable'	=> true,
+		'boards'			=> array(
+			array(
+				'name'				=> '娱乐八卦',
+				'description'		=> '高频轻内容、明星热点与社区日常讨论。',
+				'aliases'			=> array('八卦娱乐 | Gossip / Entertainment'),
 				'guest_readable'	=> true,
 			),
 			array(
-				'name'				=> '跳蚤市场 | Marketplace',
-				'description'		=> '二手交易、求购转让、同城服务与招聘信息。',
-				'guest_readable'	=> false,
+				'name'				=> '笑口常开',
+				'description'		=> '段子、搞笑和轻松分享内容。',
+				'aliases'			=> array('跳蚤市场 | Marketplace'),
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '生活百态',
+				'description'		=> '综合生活贴、海外生活杂谈与经验交流。',
+				'aliases'			=> array('海外生活 | Life Abroad'),
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '婚姻家庭',
+				'description'		=> '两性关系、家庭冲突、亲子经验与建议。',
+				'aliases'			=> array('移民签证 | Immigration'),
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '体坛纵横',
+				'description'		=> '体育赛事、球队表现与热点话题讨论。',
+				'guest_readable'	=> true,
+			),
+		),
+	),
+	array(
+		'name'				=> '文化科技区',
+		'description'		=> '文化阅读、原创文学与技术数码讨论。',
+		'aliases'			=> array('文化文娱与社区 | Culture & Community'),
+		'guest_readable'	=> true,
+		'boards'			=> array(
+			array(
+				'name'				=> '文化长廊',
+				'description'		=> '文化、随笔、阅读与思想交流。',
+				'aliases'			=> array('文化历史 | Culture'),
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '自由文学',
+				'description'		=> '原创作品、连载故事与文艺沉淀内容。',
+				'guest_readable'	=> true,
+			),
+			array(
+				'name'				=> '电脑前线 / 数码家电',
+				'description'		=> '技术向、工具向与数码家电讨论。',
+				'aliases'			=> array('科技数码 | Tech'),
+				'guest_readable'	=> true,
 			),
 		),
 	),
@@ -529,6 +635,7 @@ $role_ids['forum_trusted'] = $trusted_role_id;
 $managed_forum_ids = array_merge($category_ids, $board_ids);
 apply_forum_acl($managed_forum_ids, $group_ids, $role_ids, $category_guest_readable, $board_guest_readable);
 apply_security_config();
+hide_legacy_sample_forums($group_ids, $role_ids['forum_noaccess']);
 
 sync('forum', 'forum_id', $board_ids, true, true);
 phpbb_cache_moderators($db, $cache, $auth);

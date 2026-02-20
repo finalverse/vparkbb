@@ -3,6 +3,7 @@ services:
         class: vpark\glue\event\listener
         arguments:
             - '@template'
+            - '@dbal.conn'
             - '@config'
             - '@user'
             - '@request'

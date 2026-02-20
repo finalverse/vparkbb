@@ -1,0 +1,9 @@
+<div class="vpark-ad-slot">
+	{% if S_VPARK_INDEX_PAGE %}
+		<div class="vpark-ad-slot__title">{{ lang('VPARK_AD_SLOT_HOME_TITLE') }}</div>
+		<div class="vpark-ad-slot__desc">{{ lang('VPARK_AD_SLOT_HOME_DESC') }}</div>
+	{% else %}
+		<div class="vpark-ad-slot__title">{{ lang('VPARK_AD_SLOT_SUB_TITLE') }}</div>
+		<div class="vpark-ad-slot__desc">{{ lang('VPARK_AD_SLOT_SUB_DESC') }}</div>
+	{% endif %}
+</div>

@@ -28,4 +28,10 @@ $lang = array_merge($lang, array(
 	'VPARK_LANG_FR' => 'FRENCH',
 	'VPARK_LANG_ES' => 'SPANISH',
 	'VPARK_LANG_EN_GB' => 'ENGLISH GB',
+	'VPARK_FORUM_PANEL_TITLE' => 'Directorio de Foros VictoriaPark',
+	'VPARK_FORUM_PANEL_SUBTITLE' => 'Acceso rápido a foros clave (contenido principalmente en chino simplificado).',
+	'VPARK_AD_SLOT_HOME_TITLE' => 'Espacio de Anuncio en Inicio (Reservado)',
+	'VPARK_AD_SLOT_HOME_DESC' => 'Reservado para futuras campañas comerciales de pago.',
+	'VPARK_AD_SLOT_SUB_TITLE' => 'Espacio de Anuncio en Subpágina (Reservado)',
+	'VPARK_AD_SLOT_SUB_DESC' => 'Zona reservada para anuncios en subpáginas del foro.',
 ));
