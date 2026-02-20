@@ -7,3 +7,25 @@
 		<div class="vpark-ad-slot__desc">{{ lang('VPARK_AD_SLOT_SUB_DESC') }}</div>
 	{% endif %}
 </div>
+
+<div class="vpark-breaking-news" aria-label="{{ lang('VPARK_BREAKING_LABEL') }}">
+	<div class="vpark-breaking-news__label">{{ lang('VPARK_BREAKING_LABEL') }}</div>
+	<div class="vpark-breaking-news__viewport">
+		<div class="vpark-breaking-news__track">
+			{% for item in vpark_breaking_news %}
+				<a class="vpark-breaking-news__item" href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+				<span class="vpark-breaking-news__sep">|</span>
+			{% else %}
+				<a class="vpark-breaking-news__item" href="{{ U_INDEX }}">{{ lang('VPARK_BREAKING_EMPTY') }}</a>
+				<span class="vpark-breaking-news__sep">|</span>
+			{% endfor %}
+			{% for item in vpark_breaking_news %}
+				<a class="vpark-breaking-news__item" href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+				<span class="vpark-breaking-news__sep">|</span>
+			{% else %}
+				<a class="vpark-breaking-news__item" href="{{ U_INDEX }}">{{ lang('VPARK_BREAKING_EMPTY') }}</a>
+				<span class="vpark-breaking-news__sep">|</span>
+			{% endfor %}
+		</div>
+	</div>
+</div>

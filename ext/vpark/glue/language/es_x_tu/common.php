@@ -34,4 +34,6 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_HOME_DESC' => 'Reservado para futuras campañas comerciales de pago.',
 	'VPARK_AD_SLOT_SUB_TITLE' => 'Espacio de Anuncio en Subpágina (Reservado)',
 	'VPARK_AD_SLOT_SUB_DESC' => 'Zona reservada para anuncios en subpáginas del foro.',
+	'VPARK_BREAKING_LABEL' => 'Noticias en Tiempo Real',
+	'VPARK_BREAKING_EMPTY' => 'Todavía no hay noticias',
 ));

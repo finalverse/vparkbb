@@ -1,4 +1,26 @@
 <style>
+body.vp-classic #site-description .logo {
+	padding: 8px 12px 0 8px !important;
+}
+
+body.vp-classic #site-description .site_logo {
+	width: 64px !important;
+	height: 64px !important;
+	background-size: 64px 64px !important;
+}
+
+body.vp-classic #site-description h1 {
+	max-width: 8.2ch !important;
+	white-space: normal !important;
+	line-height: 0.92 !important;
+	margin-top: 8px !important;
+	margin-bottom: 2px !important;
+}
+
+body.vp-classic #site-description p {
+	margin-top: 2px !important;
+}
+
 .vpark-ad-slot {
 	margin: 0 0 12px 0;
 	padding: 12px 14px;
@@ -17,6 +39,74 @@
 .vpark-ad-slot__desc {
 	font-size: 12px;
 	color: #4d6377;
+}
+
+.vpark-breaking-news {
+	margin: 0 0 12px 0;
+	display: flex;
+	align-items: center;
+	border: 1px solid #bfcfdf;
+	border-radius: 6px;
+	background: #f7fbff;
+}
+
+.vpark-breaking-news__label {
+	flex: 0 0 auto;
+	padding: 8px 12px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #174a75;
+	background: #e6f1fb;
+	border-right: 1px solid #bfd1e2;
+}
+
+.vpark-breaking-news__viewport {
+	flex: 1 1 auto;
+	overflow: hidden;
+	white-space: nowrap;
+	padding: 0 10px;
+}
+
+.vpark-breaking-news__track {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	min-width: max-content;
+	animation: vparkTicker 50s linear infinite;
+}
+
+.vpark-breaking-news:hover .vpark-breaking-news__track {
+	animation-play-state: paused;
+}
+
+.vpark-breaking-news__item {
+	display: inline-block;
+	color: #134f86;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.vpark-breaking-news__item:hover {
+	text-decoration: underline;
+}
+
+.vpark-breaking-news__sep {
+	color: #7d8ea0;
+}
+
+.vpark-breaking-news--empty {
+	padding: 8px 12px;
+	font-size: 13px;
+	color: #5f7182;
+}
+
+@keyframes vparkTicker {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
 
 .vpark-forum-panel {
@@ -81,5 +171,17 @@
 	background: #fff3d6;
 	border: 1px solid #f2d08c;
 	border-radius: 999px;
+}
+
+@media (max-width: 700px) {
+	.vpark-breaking-news {
+		display: block;
+	}
+
+	.vpark-breaking-news__label {
+		display: block;
+		border-right: 0;
+		border-bottom: 1px solid #bfd1e2;
+	}
 }
 </style>

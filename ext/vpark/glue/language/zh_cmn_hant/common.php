@@ -34,4 +34,6 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_HOME_DESC' => '此區域預留給後續付費商業廣告投放。',
 	'VPARK_AD_SLOT_SUB_TITLE' => '子頁面廣告位（預留）',
 	'VPARK_AD_SLOT_SUB_DESC' => '論壇子頁面廣告展示位，後續可接入商業廣告。',
+	'VPARK_BREAKING_LABEL' => '即時滾動新聞',
+	'VPARK_BREAKING_EMPTY' => '暫無新聞滾動內容',
 ));

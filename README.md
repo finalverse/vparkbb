@@ -535,7 +535,9 @@ This repo includes `ext/vpark/glue`:
 - Session validation endpoint: `/ext/vpark/session_validate`
 - Home page top ad placeholder (reserved for paid ads)
 - Sub-page top ad placeholder (reserved for paid ads)
+- Immediate scrolling news ticker directly under the ad slot (`即时滚动新闻`)
 - Home page forum directory panel listing key board titles with direct links
+- Header logo layout: square `V` icon + right-side title area (`Victoria Park` wraps into two lines in Latin UI)
 
 Enable and verify:
 

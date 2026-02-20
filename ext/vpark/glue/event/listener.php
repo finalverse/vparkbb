@@ -104,6 +104,7 @@ class listener implements EventSubscriberInterface
 		));
 
 		$this->assign_forum_panel_items();
+		$this->assign_breaking_news_items();
 	}
 
 	public function assign_topic_summary_link($event)
@@ -205,23 +206,7 @@ class listener implements EventSubscriberInterface
 
 	protected function assign_forum_panel_items()
 	{
-		$panel_items = array(
-			array('title' => '百家论坛', 'subtitle' => '综合时政 / 社会 / 观点', 'metric' => '人气股价 60.25金币（第10名）'),
-			array('title' => '军事纵横', 'subtitle' => '军事 / 地缘 / 战争'),
-			array('title' => '经济观察', 'subtitle' => '宏观 / 政策 / 经济评论'),
-			array('title' => '谈股论金', 'subtitle' => '股市 / 交易 / 投资心态'),
-			array('title' => '股票投资', 'subtitle' => '实操策略 / 个股复盘'),
-			array('title' => '娱乐八卦', 'subtitle' => '明星热点 / 轻内容'),
-			array('title' => '笑口常开', 'subtitle' => '段子 / 搞笑 / 轻松'),
-			array('title' => '生活百态', 'subtitle' => '生活杂谈 / 海外见闻'),
-			array('title' => '婚姻家庭', 'subtitle' => '两性 / 家庭 / 亲子'),
-			array('title' => '文化长廊', 'subtitle' => '文化 / 阅读 / 随笔'),
-			array('title' => '网际谈兵', 'subtitle' => '国际关系 / 军政延展'),
-			array('title' => '史海钩沉', 'subtitle' => '历史 / 考据 / 旧闻'),
-			array('title' => '自由文学', 'subtitle' => '原创 / 连载 / 文艺'),
-			array('title' => '体坛纵横', 'subtitle' => '体育赛事 / 热点讨论'),
-			array('title' => '电脑前线 / 数码家电', 'subtitle' => '技术工具 / 数码家电'),
-		);
+		$panel_items = $this->forum_panel_items();
 
 		$forum_names = array();
 		foreach ($panel_items as $item)
@@ -241,6 +226,83 @@ class listener implements EventSubscriberInterface
 				'U_FORUM'	=> $forum_links[$title] ?? $index_url,
 			));
 		}
+	}
+
+	protected function assign_breaking_news_items()
+	{
+		$panel_items = $this->forum_panel_items();
+		$forum_names = array();
+		foreach ($panel_items as $item)
+		{
+			$forum_names[] = (string) $item['title'];
+		}
+		$forum_links = $this->forum_links_by_name($forum_names);
+		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
+
+		if (empty($forum_names))
+		{
+			return;
+		}
+
+		$sql = 'SELECT t.topic_id, t.topic_title
+			FROM ' . TOPICS_TABLE . ' t
+			JOIN ' . FORUMS_TABLE . ' f
+				ON f.forum_id = t.forum_id
+			WHERE t.topic_moved_id = 0
+				AND ' . $this->db->sql_in_set('f.forum_name', $forum_names) . '
+			ORDER BY t.topic_last_post_time DESC';
+		$result = $this->db->sql_query_limit($sql, 12);
+		$news_count = 0;
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$title = trim((string) $row['topic_title']);
+			if ($title === '')
+			{
+				continue;
+			}
+
+			$this->template->assign_block_vars('vpark_breaking_news', array(
+				'TITLE'		=> $title,
+				'U_TOPIC'	=> append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", 't=' . (int) $row['topic_id']),
+			));
+			$news_count++;
+		}
+		$this->db->sql_freeresult($result);
+
+		if ($news_count === 0)
+		{
+			$fallback_items = array_slice($panel_items, 0, 8);
+			foreach ($fallback_items as $item)
+			{
+				$title = (string) $item['title'];
+				$this->template->assign_block_vars('vpark_breaking_news', array(
+					'TITLE'		=> $title,
+					'U_TOPIC'	=> $forum_links[$title] ?? $index_url,
+				));
+			}
+		}
+	}
+
+	protected function forum_panel_items()
+	{
+		return array(
+			array('title' => '百家论坛', 'subtitle' => '综合时政 / 社会 / 观点', 'metric' => '人气股价 60.25金币（第10名）'),
+			array('title' => '军事纵横', 'subtitle' => '军事 / 地缘 / 战争'),
+			array('title' => '经济观察', 'subtitle' => '宏观 / 政策 / 经济评论'),
+			array('title' => '谈股论金', 'subtitle' => '股市 / 交易 / 投资心态'),
+			array('title' => '股票投资', 'subtitle' => '实操策略 / 个股复盘'),
+			array('title' => '娱乐八卦', 'subtitle' => '明星热点 / 轻内容'),
+			array('title' => '笑口常开', 'subtitle' => '段子 / 搞笑 / 轻松'),
+			array('title' => '生活百态', 'subtitle' => '生活杂谈 / 海外见闻'),
+			array('title' => '婚姻家庭', 'subtitle' => '两性 / 家庭 / 亲子'),
+			array('title' => '文化长廊', 'subtitle' => '文化 / 阅读 / 随笔'),
+			array('title' => '网际谈兵', 'subtitle' => '国际关系 / 军政延展'),
+			array('title' => '史海钩沉', 'subtitle' => '历史 / 考据 / 旧闻'),
+			array('title' => '自由文学', 'subtitle' => '原创 / 连载 / 文艺'),
+			array('title' => '体坛纵横', 'subtitle' => '体育赛事 / 热点讨论'),
+			array('title' => '电脑前线 / 数码家电', 'subtitle' => '技术工具 / 数码家电'),
+		);
 	}
 
 	protected function forum_links_by_name(array $forum_names)

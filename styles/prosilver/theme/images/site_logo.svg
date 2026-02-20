@@ -1,13 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="280" height="52" viewBox="0 0 280 52" role="img" aria-labelledby="vpTitle vpDesc">
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="vpTitle vpDesc">
   <title id="vpTitle">Victoria Park</title>
-  <desc id="vpDesc">Victoria Park horizontal logo</desc>
+  <desc id="vpDesc">Victoria Park icon logo</desc>
   <defs>
     <linearGradient id="vpGradSmall" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f3fbff"/>
       <stop offset="100%" stop-color="#d6ebf9"/>
     </linearGradient>
   </defs>
-  <rect x="2" y="5" width="42" height="42" rx="10" fill="none" stroke="url(#vpGradSmall)" stroke-width="4"/>
-  <path d="M12 14h10l8 16 8-16h10L30 44z" fill="#ffffff"/>
-  <text x="56" y="34" fill="#ffffff" font-family="'Segoe UI', 'Arial', sans-serif" font-size="36" font-weight="700" letter-spacing="0.3">Victoria Park</text>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="none" stroke="url(#vpGradSmall)" stroke-width="4"/>
+  <path d="M15 16h12l9 21 9-21h12L36 53z" fill="#ffffff"/>
 </svg>
