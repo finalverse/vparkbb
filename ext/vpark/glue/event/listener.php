@@ -135,13 +135,14 @@ class listener implements EventSubscriberInterface
 	protected function current_lang()
 	{
 		$lang = '';
+		$is_registered = !empty($this->user->data['is_registered']);
 
-		if (!empty($this->user->data['user_lang']))
+		if ($is_registered && !empty($this->user->data['user_lang']))
 		{
 			$lang = (string) $this->user->data['user_lang'];
 		}
 
-		if ($lang === '' && $this->request)
+		if (!$is_registered && $lang === '' && $this->request)
 		{
 			$lang = (string) $this->request->variable(
 				$this->config['cookie_name'] . '_lang',
@@ -151,7 +152,7 @@ class listener implements EventSubscriberInterface
 			);
 		}
 
-		if ($lang === '')
+		if (!$is_registered && $lang === '')
 		{
 			$cookie_name = (string) $this->config['cookie_name'] . '_lang';
 			if (isset($_COOKIE[$cookie_name]))
@@ -163,6 +164,11 @@ class listener implements EventSubscriberInterface
 		if ($lang === '')
 		{
 			$lang = (string) $this->config['default_lang'];
+		}
+
+		if ($lang === '' && !empty($this->user->lang_name))
+		{
+			$lang = (string) $this->user->lang_name;
 		}
 
 		return strtolower($lang);

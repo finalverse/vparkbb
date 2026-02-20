@@ -18,10 +18,18 @@ class session
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	public function __construct(\phpbb\user $user, \phpbb\config\config $config)
+	/** @var \phpbb\request\request_interface|null */
+	protected $request;
+
+	public function __construct(
+		\phpbb\user $user,
+		\phpbb\config\config $config,
+		$request = null
+	)
 	{
 		$this->user = $user;
 		$this->config = $config;
+		$this->request = ($request instanceof \phpbb\request\request_interface) ? $request : null;
 	}
 
 	public function validate(Request $request)
@@ -40,7 +48,7 @@ class session
 			'authenticated' => $is_authenticated,
 			'user_id' => $is_authenticated ? (int) $this->user->data['user_id'] : 0,
 			'username' => $is_authenticated ? (string) $this->user->data['username'] : '',
-			'user_lang' => !empty($this->user->data['user_lang']) ? (string) $this->user->data['user_lang'] : (string) $this->config['default_lang'],
+			'user_lang' => $this->effective_lang($is_authenticated),
 		);
 
 		$response = new JsonResponse($payload, 200);
@@ -112,5 +120,46 @@ class session
 		}
 
 		return $origin;
+	}
+
+	protected function effective_lang($is_authenticated)
+	{
+		$lang = '';
+
+		if ($is_authenticated && !empty($this->user->data['user_lang']))
+		{
+			$lang = (string) $this->user->data['user_lang'];
+		}
+
+		if (!$is_authenticated && $lang === '' && $this->request)
+		{
+			$lang = (string) $this->request->variable(
+				$this->config['cookie_name'] . '_lang',
+				'',
+				true,
+				\phpbb\request\request_interface::COOKIE
+			);
+		}
+
+		if (!$is_authenticated && $lang === '')
+		{
+			$cookie_name = (string) $this->config['cookie_name'] . '_lang';
+			if (isset($_COOKIE[$cookie_name]))
+			{
+				$lang = (string) $_COOKIE[$cookie_name];
+			}
+		}
+
+		if ($lang === '')
+		{
+			$lang = (string) $this->config['default_lang'];
+		}
+
+		if ($lang === '' && !empty($this->user->lang_name))
+		{
+			$lang = (string) $this->user->lang_name;
+		}
+
+		return strtolower($lang);
 	}
 }
