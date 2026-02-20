@@ -251,7 +251,7 @@ class listener implements EventSubscriberInterface
 			WHERE t.topic_moved_id = 0
 				AND ' . $this->db->sql_in_set('f.forum_name', $forum_names) . '
 			ORDER BY t.topic_last_post_time DESC';
-		$result = $this->db->sql_query_limit($sql, 12);
+		$result = $this->db->sql_query_limit($sql, 100);
 		$news_count = 0;
 
 		while ($row = $this->db->sql_fetchrow($result))
@@ -272,7 +272,7 @@ class listener implements EventSubscriberInterface
 
 		if ($news_count === 0)
 		{
-			$fallback_items = array_slice($panel_items, 0, 8);
+			$fallback_items = array_slice($panel_items, 0, 15);
 			foreach ($fallback_items as $item)
 			{
 				$title = (string) $item['title'];

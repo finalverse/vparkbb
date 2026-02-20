@@ -7,6 +7,110 @@ This repository now contains a production-oriented Docker stack for `www.victori
 - `mariadb`
 - `certbot` (Let's Encrypt issuance/renewal helper)
 
+## Quick Runbook（中文）
+
+下面是最常用、可直接复制执行的流程。
+
+### A. 本地验证（macOS）
+
+1. 准备 `.env`
+```bash
+cd /Users/wenyan/VictoriaPark/vparkbb
+cp -n .env.example .env
+```
+
+2. 一键启动并安装本地 phpBB
+```bash
+cd /Users/wenyan/VictoriaPark/vparkbb
+./scripts/bootstrap_local.sh --project vparkbb-local --admin-pass '<LOCAL_ADMIN_PASSWORD>'
+```
+
+3. 配置 15 个论坛与权限
+```bash
+cd /Users/wenyan/VictoriaPark/vparkbb
+./scripts/configure_forums.sh --local --project vparkbb-local
+```
+
+4. 填充热点内容（每版 2 个活跃用户 + 热点帖，支持 100 条滚动新闻）
+```bash
+cd /Users/wenyan/VictoriaPark/vparkbb
+./scripts/seed_hot_content.sh --local --project vparkbb-local --topics-per-forum 8 --feed-limit 48
+```
+
+5. 验证
+```bash
+curl -fsS http://localhost:8080/healthz
+curl -sS http://localhost:8080/ext/vpark/session_validate
+curl -sS http://localhost:8080/index.php | rg "vpark-header-forum-compact__item|vpark-header-right-ad__title|vpark-breaking-news__label"
+```
+
+本地页面：
+- Forum: `http://localhost:8080/`
+- Health: `http://localhost:8080/healthz`
+- SSO-lite: `http://localhost:8080/ext/vpark/session_validate`
+
+---
+
+### B. Ubuntu 生产部署（首次）
+
+以下示例路径使用你当前服务器目录：`/srv/vpark/vparkbb`。
+
+1. 准备配置
+```bash
+cd /srv/vpark/vparkbb
+cp -n .env.example .env
+```
+
+2. 编辑 `.env`（至少确保）
+- `COMPOSE_PROJECT_NAME=vparkbb`
+- `APP_DOMAIN=www.victoriapark.io`
+- `APP_DOMAIN_ALT=victoriapark.io`
+- `LETSENCRYPT_EMAIL=<YOUR_EMAIL>`
+- `NGINX_HTTP_PORT=80`
+- `NGINX_HTTPS_PORT=443`
+- `DB_NAME/DB_USER/DB_PASSWORD/DB_ROOT_PASSWORD`
+
+3. 一键生产引导（容器 + 证书 + 安装 + 扩展）
+```bash
+cd /srv/vpark/vparkbb
+./scripts/bootstrap_production.sh --project vparkbb --admin-pass '<PROD_ADMIN_PASSWORD>'
+```
+
+4. 配置论坛结构与权限
+```bash
+cd /srv/vpark/vparkbb
+./scripts/configure_forums.sh --project vparkbb
+```
+
+5. 填充内容
+```bash
+cd /srv/vpark/vparkbb
+./scripts/seed_hot_content.sh --project vparkbb --topics-per-forum 8 --feed-limit 48
+```
+
+6. 验证
+```bash
+cd /srv/vpark/vparkbb
+docker compose ps
+curl -I http://127.0.0.1/healthz
+curl -I https://www.victoriapark.io/
+curl -sS https://www.victoriapark.io/ext/vpark/session_validate
+```
+
+---
+
+### C. Ubuntu 日常发布（`git pull` 后）
+
+```bash
+cd /srv/vpark/vparkbb
+git pull
+docker compose up -d --build db php nginx
+./scripts/bootstrap_production.sh --project vparkbb --skip-install --skip-certbot
+./scripts/configure_forums.sh --project vparkbb
+./scripts/seed_hot_content.sh --project vparkbb --topics-per-forum 8 --feed-limit 48
+docker compose exec -T php php ./bin/phpbbcli.php cache:purge
+```
+
 ## Environment Separation (Important)
 
 Keep phpBB and Rust stacks separated in both local and production:
@@ -144,7 +248,6 @@ If already installed and you only want sync/apply defaults:
 cd ~/VictoriaPark/vparkbb
 ./scripts/bootstrap_local.sh --skip-install
 ```
-Note: I ran bootstrap with LocalDev123! in your current local DB to validate end-to-end.
 
 Optional next steps
 Change local admin password in ACP (or rerun local with your preferred password after resetting local volume).
@@ -525,6 +628,49 @@ Default seeded boards (15):
 
 Detailed matrix and SOP: `docs/forum_governance.md`.
 
+### 14A) Seed AI Users + Network Hot Content (100+ ticker candidates)
+
+This repo includes:
+
+- `scripts/phpbb_seed_hot_content.php`
+- `scripts/seed_hot_content.sh`
+
+What it does:
+
+- Ensures **2 active AI users per forum** (30 total) with deterministic usernames (`ai_<forum>_a`, `ai_<forum>_b`)
+- Pulls hot items from Google News RSS per forum topic
+- Creates topic + one reply per item (both users become active)
+- Generates enough recent topics for the `即时滚动新闻` ticker (set to pull up to 100 items)
+
+Local:
+
+```bash
+./scripts/seed_hot_content.sh --local --project vparkbb-local --topics-per-forum 8 --feed-limit 48
+```
+
+Production:
+
+```bash
+./scripts/seed_hot_content.sh --project vparkbb --topics-per-forum 8 --feed-limit 48
+```
+
+Dry run (no writes):
+
+```bash
+./scripts/seed_hot_content.sh --local --project vparkbb-local --dry-run
+```
+
+Verification:
+
+```bash
+curl -sS http://localhost:8080/index.php | rg "vpark-breaking-news__item" -n
+```
+
+Notes:
+
+- `--topics-per-forum 8` across 15 forums creates up to 120 topics (enough for 100 rolling news slots).
+- If external RSS is temporarily unavailable, script falls back to local placeholder topics and logs it.
+
 ## 15) Portal Glue (phpBB-side, no core hacks)
 
 This repo includes `ext/vpark/glue`:
@@ -537,7 +683,7 @@ This repo includes `ext/vpark/glue`:
 - Sub-page top ad placeholder (reserved for paid ads)
 - Immediate scrolling news ticker directly under the ad slot (`即时滚动新闻`)
 - Home page forum directory panel listing key board titles with direct links
-- Header logo layout: square `V` icon + right-side title area (`Victoria Park` wraps into two lines in Latin UI)
+- Header top bar layout: left compact logo/title, center compact forum matrix, right reserved ad slot (same width as logo block)
 
 Enable and verify:
 

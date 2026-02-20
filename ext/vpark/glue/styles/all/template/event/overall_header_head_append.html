@@ -1,24 +1,134 @@
 <style>
+body.vp-classic #page-header .vp-headerbar {
+	padding: 6px 8px;
+}
+
+body.vp-classic #page-header .vp-headerbar > .inner {
+	display: grid;
+	grid-template-columns: 278px minmax(0, 1fr) 278px;
+	grid-template-areas: "brand center ad";
+	gap: 10px;
+	align-items: start;
+}
+
+body.vp-classic #site-description.vp-site-description {
+	grid-area: brand;
+	float: none;
+	width: auto;
+	margin: 0;
+	display: grid;
+	grid-template-columns: 68px minmax(0, 1fr);
+	grid-template-areas:
+		"logo title"
+		"logo desc";
+	column-gap: 7px;
+	row-gap: 2px;
+	align-items: center;
+}
+
 body.vp-classic #site-description .logo {
-	padding: 8px 12px 0 8px !important;
+	grid-area: logo;
+	float: none;
+	padding: 0;
+	margin: 0;
 }
 
 body.vp-classic #site-description .site_logo {
-	width: 64px !important;
-	height: 64px !important;
-	background-size: 64px 64px !important;
+	width: 68px;
+	height: 68px;
+	background-size: 68px 68px;
 }
 
 body.vp-classic #site-description h1 {
-	max-width: 8.2ch !important;
-	white-space: normal !important;
-	line-height: 0.92 !important;
-	margin-top: 8px !important;
-	margin-bottom: 2px !important;
+	grid-area: title;
+	margin: 0;
+	max-width: 6.6ch;
+	font-size: 3em;
+	line-height: 0.9;
+	white-space: normal;
+	color: #f3f8ff;
 }
 
-body.vp-classic #site-description p {
-	margin-top: 2px !important;
+body.vp-classic #site-description > p:not(.skiplink) {
+	grid-area: desc;
+	margin: 0;
+	font-size: 1.45em;
+	line-height: 1;
+	color: #d9ecff;
+}
+
+body.vp-classic #site-description .skiplink {
+	display: none;
+}
+
+body.vp-classic #search-box.vp-search-header {
+	display: none;
+}
+
+.vpark-header-center {
+	grid-area: center;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+
+.vpark-header-forum-compact {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 4px;
+	padding: 5px;
+	border: 1px solid rgba(192, 220, 247, 0.62);
+	border-radius: 6px;
+	background: rgba(15, 65, 108, 0.26);
+}
+
+.vpark-header-forum-compact__item {
+	display: block;
+	padding: 4px 5px;
+	border: 1px solid rgba(183, 214, 242, 0.58);
+	border-radius: 3px;
+	background: rgba(14, 74, 121, 0.42);
+	color: #eaf4ff;
+	font-size: 12px;
+	font-weight: 700;
+	text-align: center;
+	line-height: 1.2;
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.vpark-header-forum-compact__item:hover {
+	text-decoration: none;
+	background: rgba(20, 92, 148, 0.52);
+}
+
+.vpark-header-right-ad {
+	grid-area: ad;
+	min-height: 70px;
+	padding: 9px 10px;
+	border: 1px dashed rgba(203, 225, 247, 0.74);
+	border-radius: 6px;
+	background: rgba(11, 58, 96, 0.28);
+	color: #eaf4ff;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.vpark-header-right-ad__title {
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.vpark-header-right-ad__desc {
+	margin-top: 2px;
+	font-size: 12px;
+	color: #d6e8fa;
+	line-height: 1.2;
 }
 
 .vpark-ad-slot {
@@ -173,7 +283,47 @@ body.vp-classic #site-description p {
 	border-radius: 999px;
 }
 
+@media (max-width: 1220px) {
+	body.vp-classic #page-header .vp-headerbar > .inner {
+		grid-template-columns: 240px minmax(0, 1fr);
+		grid-template-areas:
+			"brand ad"
+			"center center";
+	}
+
+	.vpark-header-forum-compact {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
 @media (max-width: 700px) {
+	body.vp-classic #page-header .vp-headerbar > .inner {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"brand"
+			"ad"
+			"center";
+	}
+
+	body.vp-classic #site-description.vp-site-description {
+		grid-template-columns: 62px minmax(0, 1fr);
+	}
+
+	body.vp-classic #site-description .site_logo {
+		width: 62px;
+		height: 62px;
+		background-size: 62px 62px;
+	}
+
+	body.vp-classic #site-description h1 {
+		max-width: none;
+		font-size: 2.6em;
+	}
+
+	.vpark-header-forum-compact {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
 	.vpark-breaking-news {
 		display: block;
 	}

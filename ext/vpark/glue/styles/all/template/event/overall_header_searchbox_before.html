@@ -1,0 +1,11 @@
+<div class="vpark-header-center" role="navigation" aria-label="{{ lang('VPARK_FORUM_PANEL_TITLE') }}">
+	<div class="vpark-header-forum-compact">
+		{% for forum in vpark_forum_panel %}
+			<a class="vpark-header-forum-compact__item" href="{{ forum.U_FORUM }}">{{ forum.TITLE }}</a>
+		{% endfor %}
+	</div>
+</div>
+<div class="vpark-header-right-ad" aria-label="{{ lang('VPARK_HEADER_AD_TITLE') }}">
+	<div class="vpark-header-right-ad__title">{{ lang('VPARK_HEADER_AD_TITLE') }}</div>
+	<div class="vpark-header-right-ad__desc">{{ lang('VPARK_HEADER_AD_DESC') }}</div>
+</div>
