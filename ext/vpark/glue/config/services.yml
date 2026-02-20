@@ -1,0 +1,18 @@
+services:
+    vpark.glue.listener:
+        class: vpark\glue\event\listener
+        arguments:
+            - '@template'
+            - '@config'
+            - '@user'
+            - '@request'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    vpark.glue.controller.session:
+        class: vpark\glue\controller\session
+        arguments:
+            - '@user'
+            - '@config'

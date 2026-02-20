@@ -1,0 +1,5 @@
+vpark_glue_session_validate:
+    path: /ext/vpark/session_validate
+    defaults: { _controller: vpark.glue.controller.session:validate }
+    methods: [GET, OPTIONS]
+

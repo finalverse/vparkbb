@@ -1,0 +1,17 @@
+{% if not S_USER_LOGGED_IN %}
+<li data-last-responsive="true">
+	<a href="{{ U_VPARK_LANG_ZH_HANS }}" role="menuitem" title="{{ lang('VPARK_LANG_ZH_HANS') }}">
+		<span>{% if S_VPARK_LANG_ZH_HANS %}<strong>{{ lang('VPARK_LANG_ZH_HANS') }}</strong>{% else %}{{ lang('VPARK_LANG_ZH_HANS') }}{% endif %}</span>
+	</a>
+</li>
+<li data-last-responsive="true">
+	<a href="{{ U_VPARK_LANG_ZH_HANT }}" role="menuitem" title="{{ lang('VPARK_LANG_ZH_HANT') }}">
+		<span>{% if S_VPARK_LANG_ZH_HANT %}<strong>{{ lang('VPARK_LANG_ZH_HANT') }}</strong>{% else %}{{ lang('VPARK_LANG_ZH_HANT') }}{% endif %}</span>
+	</a>
+</li>
+<li data-last-responsive="true">
+	<a href="{{ U_VPARK_LANG_EN }}" role="menuitem" title="{{ lang('VPARK_LANG_EN') }}">
+		<span>{% if S_VPARK_LANG_EN %}<strong>{{ lang('VPARK_LANG_EN') }}</strong>{% else %}{{ lang('VPARK_LANG_EN') }}{% endif %}</span>
+	</a>
+</li>
+{% endif %}

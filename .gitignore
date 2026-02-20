@@ -1,0 +1,60 @@
+# -------------------------------
+# Secrets / local configuration
+# -------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# phpBB generated config with DB credentials
+config.php
+config.php.preinstall.bak
+
+# -------------------------------
+# Runtime / generated data
+# -------------------------------
+cache/*
+!cache/.htaccess
+!cache/index.htm
+
+files/*
+!files/.htaccess
+!files/index.htm
+
+store/*
+!store/.htaccess
+!store/index.htm
+
+# phpBB downloads/temp artifacts
+download/*
+!download/.htaccess
+!download/index.htm
+
+# -------------------------------
+# Backups / dumps / certs
+# -------------------------------
+backups/
+*.sql
+*.sql.gz
+*.dump
+
+infra/certbot/conf/
+infra/certbot/www/
+
+# -------------------------------
+# Logs
+# -------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -------------------------------
+# OS / editor junk
+# -------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/

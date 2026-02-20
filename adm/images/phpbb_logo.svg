@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="54" viewBox="0 0 360 54" role="img" aria-labelledby="vpAcpTitle vpAcpDesc">
+  <title id="vpAcpTitle">Victoria Park</title>
+  <desc id="vpAcpDesc">Victoria Park ACP logo</desc>
+  <defs>
+    <linearGradient id="vpAcpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4b5f80"/>
+      <stop offset="100%" stop-color="#2f476b"/>
+    </linearGradient>
+  </defs>
+  <rect x="1.5" y="4" width="46" height="46" rx="11" fill="none" stroke="url(#vpAcpGrad)" stroke-width="4"/>
+  <path d="M12 13h10l8 17 8-17h10L31 45z" fill="#415a80"/>
+  <text x="58" y="35" fill="#3f5576" font-family="'Segoe UI', 'Arial', sans-serif" font-size="36" font-weight="700" letter-spacing="0.25">Victoria Park</text>
+</svg>

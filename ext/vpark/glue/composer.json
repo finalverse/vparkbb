@@ -1,0 +1,22 @@
+{
+	"name": "vpark/glue",
+	"type": "phpbb-extension",
+	"description": "VictoriaPark portal glue for phpBB (portal links, topic summary link, and session validation endpoint).",
+	"version": "1.0.0",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "VictoriaPark Engineering"
+		}
+	],
+	"require": {
+		"php": ">=7.1.3",
+		"phpbb/phpbb": ">=3.3.0"
+	},
+	"extra": {
+		"display-name": "vpark glue",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		}
+	}
+}

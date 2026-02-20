@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="vpFavTitle vpFavDesc">
+  <title id="vpFavTitle">维园网 favicon</title>
+  <desc id="vpFavDesc">VictoriaPark.io browser tab icon</desc>
+  <defs>
+    <linearGradient id="favGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3bc2ff"/>
+      <stop offset="100%" stop-color="#0d5f9f"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="13" fill="url(#favGrad)"/>
+  <text x="32" y="43" text-anchor="middle" font-family="'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif" font-size="30" font-weight="700" fill="#f3fbff">维</text>
+  <circle cx="49" cy="15" r="5" fill="#ffd55c"/>
+</svg>
