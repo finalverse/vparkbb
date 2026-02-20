@@ -137,38 +137,43 @@ class listener implements EventSubscriberInterface
 		$lang = '';
 		$is_registered = !empty($this->user->data['is_registered']);
 
-		if ($is_registered && !empty($this->user->data['user_lang']))
+		if ($this->request)
 		{
-			$lang = (string) $this->user->data['user_lang'];
+			$lang = $this->normalize_supported_lang((string) $this->request->variable('language', '', true));
 		}
 
-		if (!$is_registered && $lang === '' && $this->request)
+		if ($lang === '' && $this->request)
 		{
-			$lang = (string) $this->request->variable(
+			$lang = $this->normalize_supported_lang((string) $this->request->variable(
 				$this->config['cookie_name'] . '_lang',
 				'',
 				true,
 				\phpbb\request\request_interface::COOKIE
-			);
-		}
-
-		if (!$is_registered && $lang === '')
-		{
-			$cookie_name = (string) $this->config['cookie_name'] . '_lang';
-			if (isset($_COOKIE[$cookie_name]))
-			{
-				$lang = (string) $_COOKIE[$cookie_name];
-			}
+			));
 		}
 
 		if ($lang === '')
 		{
-			$lang = (string) $this->config['default_lang'];
+			$cookie_name = (string) $this->config['cookie_name'] . '_lang';
+			if (isset($_COOKIE[$cookie_name]))
+			{
+				$lang = $this->normalize_supported_lang((string) $_COOKIE[$cookie_name]);
+			}
+		}
+
+		if ($lang === '' && $is_registered && !empty($this->user->data['user_lang']))
+		{
+			$lang = $this->normalize_supported_lang((string) $this->user->data['user_lang']);
+		}
+
+		if ($lang === '')
+		{
+			$lang = $this->normalize_supported_lang((string) $this->config['default_lang']);
 		}
 
 		if ($lang === '' && !empty($this->user->lang_name))
 		{
-			$lang = (string) $this->user->lang_name;
+			$lang = $this->normalize_supported_lang((string) $this->user->lang_name);
 		}
 
 		return strtolower($lang);
@@ -177,5 +182,18 @@ class listener implements EventSubscriberInterface
 	protected function is_east_asian_lang($lang)
 	{
 		return strpos($lang, 'zh') === 0 || strpos($lang, 'ja') === 0 || strpos($lang, 'ko') === 0;
+	}
+
+	protected function normalize_supported_lang($lang)
+	{
+		$lang = strtolower(trim((string) $lang));
+
+		$supported = array(
+			'zh_cmn_hans' => true,
+			'zh_cmn_hant' => true,
+			'en' => true,
+		);
+
+		return isset($supported[$lang]) ? $lang : '';
 	}
 }

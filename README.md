@@ -569,8 +569,8 @@ docker compose exec -T php php ./bin/phpbbcli.php cache:purge
 
 Language switching behavior:
 
-- Guest users (not logged in): switch language from the header links (`简体 / 繁體 / EN`) on the front page. phpBB stores the selection in cookie `phpbb3_*_lang`.
-- Registered users: UCP profile language (`user_lang`) is used first.
+- Guest users: switch language from the header links (`简体中文 / 繁體中文 / ENGLISH`) on the front page. phpBB stores the selection in cookie `phpbb3_*_lang`.
+- Registered users: the same header language links are available after login for quick switching (cookie-based). If no language cookie is set, UCP profile language (`user_lang`) is used.
 
 Supported options:
 
