@@ -540,6 +540,9 @@ Expected shape:
 Installed language dirs:
 
 - `language/en`
+- `language/en_us`
+- `language/fr`
+- `language/es_x_tu`
 - `language/zh_cmn_hans`
 - `language/zh_cmn_hant`
 
@@ -548,8 +551,24 @@ Install/update from your local packs:
 ```bash
 rsync -a ~/VictoriaPark/mandarin_chinese_simplified_script/language/zh_cmn_hans/ ./language/zh_cmn_hans/
 rsync -a ~/VictoriaPark/mandarin_chinese_traditional_script/language/zh_cmn_hant/ ./language/zh_cmn_hant/
+rsync -a ~/VictoriaPark/american_english_4_15_0/language/en_us/ ./language/en_us/
+rsync -a ~/VictoriaPark/french_4_15_0/language/fr/ ./language/fr/
+rsync -a ~/VictoriaPark/spanish_casual_honorifics_3_3_15/language/es_x_tu/ ./language/es_x_tu/
+
+rsync -a ~/VictoriaPark/american_english_4_15_0/ext/phpbb/viglink/language/en_us/ ./ext/phpbb/viglink/language/en_us/
+rsync -a ~/VictoriaPark/french_4_15_0/ext/phpbb/viglink/language/fr/ ./ext/phpbb/viglink/language/fr/
+rsync -a ~/VictoriaPark/spanish_casual_honorifics_3_3_15/ext/phpbb/viglink/language/es_x_tu/ ./ext/phpbb/viglink/language/es_x_tu/
+
 rsync -a ~/VictoriaPark/mandarin_chinese_traditional_script/ext/phpbb/viglink/language/zh_cmn_hant/ ./ext/phpbb/viglink/language/zh_cmn_hant/
+
+rsync -a ~/VictoriaPark/american_english_4_15_0/styles/prosilver/theme/en_us/ ./styles/prosilver/theme/en_us/
+rsync -a ~/VictoriaPark/french_4_15_0/styles/prosilver/theme/fr/ ./styles/prosilver/theme/fr/
+rsync -a ~/VictoriaPark/spanish_casual_honorifics_3_3_15/styles/prosilver/theme/es_x_tu/ ./styles/prosilver/theme/es_x_tu/
 rsync -a ~/VictoriaPark/mandarin_chinese_traditional_script/styles/prosilver/theme/zh_cmn_hant/ ./styles/prosilver/theme/zh_cmn_hant/
+
+rsync -a ~/VictoriaPark/american_english_4_15_0/styles/prosilver/theme/en_us/ ./styles/victoriaclassic/theme/en_us/
+rsync -a ~/VictoriaPark/french_4_15_0/styles/prosilver/theme/fr/ ./styles/victoriaclassic/theme/fr/
+rsync -a ~/VictoriaPark/spanish_casual_honorifics_3_3_15/styles/prosilver/theme/es_x_tu/ ./styles/victoriaclassic/theme/es_x_tu/
 rsync -a ~/VictoriaPark/mandarin_chinese_traditional_script/styles/prosilver/theme/zh_cmn_hant/ ./styles/victoriaclassic/theme/zh_cmn_hant/
 ```
 
@@ -560,23 +579,44 @@ set -a && source .env && set +a
 docker compose exec -T db mariadb -uroot -p"${DB_ROOT_PASSWORD}" -e \
   "USE ${DB_NAME}; \
    INSERT INTO phpbb_lang (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+   SELECT 'en_us', 'en_us', 'English (American)', 'English (US)', 'phpBB Limited' \
+   FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM phpbb_lang WHERE lang_iso='en_us'); \
+   INSERT INTO phpbb_lang (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
    SELECT 'zh_cmn_hant', 'zh_cmn_hant', 'Mandarin Chinese (Traditional script)', '繁體中文', '竹貓星球' \
    FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM phpbb_lang WHERE lang_iso='zh_cmn_hant'); \
+   INSERT INTO phpbb_lang (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+   SELECT 'fr', 'fr', 'French', 'Français', 'phpBB-fr.com Team' \
+   FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM phpbb_lang WHERE lang_iso='fr'); \
+   INSERT INTO phpbb_lang (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+   SELECT 'es_x_tu', 'es_x_tu', 'Spanish (Casual Honorifics)', 'Español (Tú)', 'phpBB-es.com Team' \
+   FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM phpbb_lang WHERE lang_iso='es_x_tu'); \
    UPDATE phpbb_config SET config_value='zh_cmn_hans' WHERE config_name='default_lang'; \
    UPDATE phpbb_users SET user_lang='zh_cmn_hans' WHERE user_id=1;"
 docker compose exec -T php php ./bin/phpbbcli.php cache:purge
 ```
 
+Ubuntu existing-install refresh (recommended after `git pull`):
+
+```bash
+cd /srv/vpark/vparkbb
+docker compose up -d db php nginx
+./scripts/bootstrap_production.sh --project vparkbb --skip-install --skip-certbot
+```
+
 Language switching behavior:
 
 - Guest users: switch language from the header links (`简体中文 / 繁體中文 / ENGLISH`) on the front page. phpBB stores the selection in cookie `phpbb3_*_lang`.
-- Registered users: the same header language links are available after login for quick switching (cookie-based). If no language cookie is set, UCP profile language (`user_lang`) is used.
+- Registered users: the same header links remain available after login for quick switching (cookie-based). If no language cookie is set, UCP profile language (`user_lang`) is used.
+- Extra dropdown in header: `FRENCH`, `SPANISH`, `ENGLISH GB`.
 
 Supported options:
 
-- English (`en`)
-- Simplified Chinese (`zh_cmn_hans`)
-- Traditional Chinese (`zh_cmn_hant`)
+- English US (`en_us`) - quick header link `ENGLISH`
+- English GB (`en`) - dropdown item `ENGLISH GB`
+- Simplified Chinese (`zh_cmn_hans`, also accepts alias `zh_cn`)
+- Traditional Chinese (`zh_cmn_hant`, also accepts aliases like `zh_tw`)
+- French (`fr`)
+- Spanish casual honorifics (`es_x_tu`)
 
 ## 17) Branding + Footer Text
 
@@ -592,6 +632,9 @@ Current branding target:
   - `Copyright ©2026 victoriapark.io All rights reserved`
 - Footer legal text is language-pack driven via:
   - `ext/vpark/glue/language/en/common.php`
+  - `ext/vpark/glue/language/en_us/common.php`
+  - `ext/vpark/glue/language/fr/common.php`
+  - `ext/vpark/glue/language/es_x_tu/common.php`
   - `ext/vpark/glue/language/zh_cmn_hans/common.php`
   - `ext/vpark/glue/language/zh_cmn_hant/common.php`
 

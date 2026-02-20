@@ -85,10 +85,16 @@ class listener implements EventSubscriberInterface
 			'SITE_DESCRIPTION' => 'VictoriaPark.io',
 			'U_VPARK_LANG_ZH_HANS' => $this->with_language($index_url, 'zh_cmn_hans'),
 			'U_VPARK_LANG_ZH_HANT' => $this->with_language($index_url, 'zh_cmn_hant'),
-			'U_VPARK_LANG_EN' => $this->with_language($index_url, 'en'),
+			'U_VPARK_LANG_EN' => $this->with_language($index_url, 'en_us'),
+			'U_VPARK_LANG_FR' => $this->with_language($index_url, 'fr'),
+			'U_VPARK_LANG_ES' => $this->with_language($index_url, 'es_x_tu'),
+			'U_VPARK_LANG_EN_GB' => $this->with_language($index_url, 'en'),
 			'S_VPARK_LANG_ZH_HANS' => $lang === 'zh_cmn_hans',
 			'S_VPARK_LANG_ZH_HANT' => $lang === 'zh_cmn_hant',
-			'S_VPARK_LANG_EN' => $lang === 'en',
+			'S_VPARK_LANG_EN' => $lang === 'en_us',
+			'S_VPARK_LANG_FR' => $lang === 'fr',
+			'S_VPARK_LANG_ES' => $lang === 'es_x_tu',
+			'S_VPARK_LANG_EN_GB' => $lang === 'en',
 		));
 	}
 
@@ -187,13 +193,28 @@ class listener implements EventSubscriberInterface
 	protected function normalize_supported_lang($lang)
 	{
 		$lang = strtolower(trim((string) $lang));
+		$lang = str_replace('-', '_', $lang);
 
-		$supported = array(
-			'zh_cmn_hans' => true,
-			'zh_cmn_hant' => true,
-			'en' => true,
+		$aliases = array(
+			'zh_cn' => 'zh_cmn_hans',
+			'zh_hans' => 'zh_cmn_hans',
+			'zh_cmn_hans' => 'zh_cmn_hans',
+			'zh_tw' => 'zh_cmn_hant',
+			'zh_hk' => 'zh_cmn_hant',
+			'zh_hant' => 'zh_cmn_hant',
+			'zh_traditional' => 'zh_cmn_hant',
+			'zh_cmn_hant' => 'zh_cmn_hant',
+			'en' => 'en',
+			'en_gb' => 'en',
+			'en_us' => 'en_us',
+			'fr' => 'fr',
+			'fr_fr' => 'fr',
+			'es' => 'es_x_tu',
+			'es_es' => 'es_x_tu',
+			'es_x_tu' => 'es_x_tu',
+			'sp_sp' => 'es_x_tu',
 		);
 
-		return isset($supported[$lang]) ? $lang : '';
+		return isset($aliases[$lang]) ? $aliases[$lang] : '';
 	}
 }

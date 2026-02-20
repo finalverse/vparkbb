@@ -171,12 +171,27 @@ class session
 	protected function normalize_supported_lang($lang)
 	{
 		$lang = strtolower(trim((string) $lang));
-		$supported = array(
-			'zh_cmn_hans' => true,
-			'zh_cmn_hant' => true,
-			'en' => true,
+		$lang = str_replace('-', '_', $lang);
+		$aliases = array(
+			'zh_cn' => 'zh_cmn_hans',
+			'zh_hans' => 'zh_cmn_hans',
+			'zh_cmn_hans' => 'zh_cmn_hans',
+			'zh_tw' => 'zh_cmn_hant',
+			'zh_hk' => 'zh_cmn_hant',
+			'zh_hant' => 'zh_cmn_hant',
+			'zh_traditional' => 'zh_cmn_hant',
+			'zh_cmn_hant' => 'zh_cmn_hant',
+			'en' => 'en',
+			'en_gb' => 'en',
+			'en_us' => 'en_us',
+			'fr' => 'fr',
+			'fr_fr' => 'fr',
+			'es' => 'es_x_tu',
+			'es_es' => 'es_x_tu',
+			'es_x_tu' => 'es_x_tu',
+			'sp_sp' => 'es_x_tu',
 		);
 
-		return isset($supported[$lang]) ? $lang : '';
+		return isset($aliases[$lang]) ? $aliases[$lang] : '';
 	}
 }

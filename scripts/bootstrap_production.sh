@@ -230,8 +230,17 @@ if [[ "${installed_config_table}" == "1" ]]; then
 	"${compose_cmd[@]}" exec -T db mariadb -uroot -p"${DB_ROOT_PASSWORD}" -e \
 		"USE ${DB_NAME}; \
 		 INSERT INTO \`${TABLE_PREFIX}lang\` (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+		 SELECT 'en_us', 'en_us', 'English (American)', 'English (US)', 'phpBB Limited' \
+		 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM \`${TABLE_PREFIX}lang\` WHERE lang_iso='en_us'); \
+		 INSERT INTO \`${TABLE_PREFIX}lang\` (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
 		 SELECT 'zh_cmn_hant', 'zh_cmn_hant', 'Mandarin Chinese (Traditional script)', '繁體中文', '竹貓星球' \
 		 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM \`${TABLE_PREFIX}lang\` WHERE lang_iso='zh_cmn_hant'); \
+		 INSERT INTO \`${TABLE_PREFIX}lang\` (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+		 SELECT 'fr', 'fr', 'French', 'Francais', 'phpBB-fr.com Team' \
+		 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM \`${TABLE_PREFIX}lang\` WHERE lang_iso='fr'); \
+		 INSERT INTO \`${TABLE_PREFIX}lang\` (lang_iso, lang_dir, lang_english_name, lang_local_name, lang_author) \
+		 SELECT 'es_x_tu', 'es_x_tu', 'Spanish (Casual Honorifics)', 'Espanol (Tu)', 'phpBB-es.com Team' \
+		 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM \`${TABLE_PREFIX}lang\` WHERE lang_iso='es_x_tu'); \
 		 UPDATE \`${TABLE_PREFIX}config\` SET config_value='${DEFAULT_LANG_SQL}' WHERE config_name='default_lang'; \
 		 UPDATE \`${TABLE_PREFIX}config\` SET config_value='${SITENAME_SQL}' WHERE config_name='sitename'; \
 		 UPDATE \`${TABLE_PREFIX}config\` SET config_value='${SITE_DESC_SQL}' WHERE config_name='site_desc'; \

@@ -24,4 +24,8 @@ $lang = array_merge($lang, array(
 	'VPARK_LANG_ZH_HANS' => '简体中文',
 	'VPARK_LANG_ZH_HANT' => '繁體中文',
 	'VPARK_LANG_EN' => 'ENGLISH',
+	'VPARK_LANG_MORE' => '更多语言',
+	'VPARK_LANG_FR' => 'FRENCH',
+	'VPARK_LANG_ES' => 'SPANISH',
+	'VPARK_LANG_EN_GB' => 'ENGLISH GB',
 ));

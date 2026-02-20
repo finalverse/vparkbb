@@ -13,3 +13,28 @@
 		<span>{% if S_VPARK_LANG_EN %}<strong>{{ lang('VPARK_LANG_EN') }}</strong>{% else %}{{ lang('VPARK_LANG_EN') }}{% endif %}</span>
 	</a>
 </li>
+<li class="dropdown-container" data-last-responsive="true">
+	<a href="#" class="dropdown-trigger" role="button" aria-haspopup="true" title="{{ lang('VPARK_LANG_MORE') }}">
+		<span>{{ lang('VPARK_LANG_MORE') }}</span>
+	</a>
+	<div class="dropdown">
+		<div class="pointer"><div class="pointer-inner"></div></div>
+		<ul class="dropdown-contents" role="menu">
+			<li>
+				<a href="{{ U_VPARK_LANG_FR }}" role="menuitem" title="{{ lang('VPARK_LANG_FR') }}">
+					<span>{% if S_VPARK_LANG_FR %}<strong>{{ lang('VPARK_LANG_FR') }}</strong>{% else %}{{ lang('VPARK_LANG_FR') }}{% endif %}</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{ U_VPARK_LANG_ES }}" role="menuitem" title="{{ lang('VPARK_LANG_ES') }}">
+					<span>{% if S_VPARK_LANG_ES %}<strong>{{ lang('VPARK_LANG_ES') }}</strong>{% else %}{{ lang('VPARK_LANG_ES') }}{% endif %}</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{ U_VPARK_LANG_EN_GB }}" role="menuitem" title="{{ lang('VPARK_LANG_EN_GB') }}">
+					<span>{% if S_VPARK_LANG_EN_GB %}<strong>{{ lang('VPARK_LANG_EN_GB') }}</strong>{% else %}{{ lang('VPARK_LANG_EN_GB') }}{% endif %}</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</li>
