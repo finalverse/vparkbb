@@ -38,4 +38,7 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_SUB_DESC' => 'Reserved ad placement area for forum subpages.',
 	'VPARK_BREAKING_LABEL' => 'Breaking News',
 	'VPARK_BREAKING_EMPTY' => 'No breaking items yet',
+	'VPARK_HOME_NEWS_TITLE' => 'VictoriaPark Live News',
+	'VPARK_HOME_NEWS_MORE' => 'More News',
+	'VPARK_HOME_NEWS_EMPTY' => 'No news items yet',
 ));

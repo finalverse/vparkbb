@@ -38,4 +38,7 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_SUB_DESC' => '论坛子页面广告展示位，后续可接入商业广告。',
 	'VPARK_BREAKING_LABEL' => '即时滚动新闻',
 	'VPARK_BREAKING_EMPTY' => '暂无新闻滚动内容',
+	'VPARK_HOME_NEWS_TITLE' => '维园实时新闻',
+	'VPARK_HOME_NEWS_MORE' => '更多新闻',
+	'VPARK_HOME_NEWS_EMPTY' => '暂无新闻内容',
 ));

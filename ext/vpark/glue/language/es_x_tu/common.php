@@ -38,4 +38,7 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_SUB_DESC' => 'Zona reservada para anuncios en subpáginas del foro.',
 	'VPARK_BREAKING_LABEL' => 'Noticias en Tiempo Real',
 	'VPARK_BREAKING_EMPTY' => 'Todavía no hay noticias',
+	'VPARK_HOME_NEWS_TITLE' => 'Noticias en vivo de VictoriaPark',
+	'VPARK_HOME_NEWS_MORE' => 'Más noticias',
+	'VPARK_HOME_NEWS_EMPTY' => 'Todavía no hay noticias',
 ));

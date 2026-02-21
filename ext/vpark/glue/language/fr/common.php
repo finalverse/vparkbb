@@ -38,4 +38,7 @@ $lang = array_merge($lang, array(
 	'VPARK_AD_SLOT_SUB_DESC' => 'Zone publicitaire réservée pour les sous-pages du forum.',
 	'VPARK_BREAKING_LABEL' => 'Actualités Défilantes',
 	'VPARK_BREAKING_EMPTY' => 'Aucune actualité pour le moment',
+	'VPARK_HOME_NEWS_TITLE' => 'Actualités en direct VictoriaPark',
+	'VPARK_HOME_NEWS_MORE' => 'Plus d’actualités',
+	'VPARK_HOME_NEWS_EMPTY' => 'Aucune actualité pour le moment',
 ));
