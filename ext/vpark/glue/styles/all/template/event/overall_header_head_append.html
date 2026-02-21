@@ -1,83 +1,109 @@
 <style>
-body.vp-classic #page-header .vp-headerbar {
-	padding: 6px 8px;
+body#phpbb #page-header .headerbar {
+	padding: 8px 10px;
 }
 
-body.vp-classic #page-header .vp-headerbar > .inner {
+body#phpbb #page-header .headerbar > .inner {
 	display: grid;
-	grid-template-columns: 278px minmax(0, 1fr) 278px;
+	grid-template-columns: minmax(230px, 250px) minmax(0, 1fr) minmax(220px, 240px);
 	grid-template-areas: "brand center ad";
 	gap: 10px;
 	align-items: start;
 }
 
-body.vp-classic #site-description.vp-site-description {
+body#phpbb #site-description {
 	grid-area: brand;
 	float: none;
 	width: auto;
 	margin: 0;
+	padding: 6px 10px 6px 8px;
 	display: grid;
-	grid-template-columns: 68px minmax(0, 1fr);
+	grid-template-columns: 88px minmax(0, 1fr);
 	grid-template-areas:
 		"logo title"
 		"logo desc";
-	column-gap: 7px;
+	column-gap: 8px;
 	row-gap: 2px;
 	align-items: center;
+	align-self: start;
+	border-radius: 10px;
+	border: 1px solid rgba(191, 223, 248, 0.35);
+	background: linear-gradient(180deg, rgba(17, 95, 151, 0.34) 0%, rgba(13, 71, 116, 0.28) 100%);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.17);
 }
 
-body.vp-classic #site-description .logo {
+body#phpbb #site-description .logo {
 	grid-area: logo;
 	float: none;
 	padding: 0;
 	margin: 0;
+	width: 88px;
+	min-height: 74px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 16px;
+	background: rgba(255, 255, 255, 0.06);
 }
 
-body.vp-classic #site-description .site_logo {
-	width: 68px;
-	height: 68px;
-	background-size: 68px 68px;
+body#phpbb #site-description .site_logo {
+	width: 54px;
+	height: 54px;
+	background-size: 54px 54px;
 }
 
-body.vp-classic #site-description h1 {
+body#phpbb #site-description h1 {
 	grid-area: title;
 	margin: 0;
-	max-width: 6.6ch;
-	font-size: 3em;
-	line-height: 0.9;
+	max-width: 100%;
+	font-size: 2.28em;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 0.01em;
 	white-space: normal;
 	color: #f3f8ff;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.14);
+	text-align: center;
+	justify-self: center;
+	width: 100%;
 }
 
-body.vp-classic #site-description > p:not(.skiplink) {
+body#phpbb #site-description > p:not(.skiplink) {
 	grid-area: desc;
 	margin: 0;
-	font-size: 1.45em;
-	line-height: 1;
-	color: #d9ecff;
+	font-size: 0.98em;
+	line-height: 1.15;
+	color: #e1f0ff;
+	text-align: center;
+	justify-self: center;
+	width: 100%;
 }
 
-body.vp-classic #site-description .skiplink {
+body#phpbb #site-description .skiplink {
 	display: none;
 }
 
-body.vp-classic #search-box.vp-search-header {
+body#phpbb #search-box.search-header {
 	display: none;
 }
 
 .vpark-header-center {
 	grid-area: center;
 	display: flex;
+	justify-content: center;
 	align-items: center;
+	align-self: start;
+	margin-top: 1px;
 	min-width: 0;
 }
 
 .vpark-header-forum-compact {
 	width: 100%;
+	max-width: 790px;
 	display: grid;
 	grid-template-columns: repeat(5, minmax(0, 1fr));
 	gap: 4px;
-	padding: 5px;
+	padding: 6px;
 	border: 1px solid rgba(192, 220, 247, 0.62);
 	border-radius: 6px;
 	background: rgba(15, 65, 108, 0.26);
@@ -107,8 +133,8 @@ body.vp-classic #search-box.vp-search-header {
 
 .vpark-header-right-ad {
 	grid-area: ad;
-	min-height: 70px;
-	padding: 9px 10px;
+	min-height: 72px;
+	padding: 8px 9px;
 	border: 1px dashed rgba(203, 225, 247, 0.74);
 	border-radius: 6px;
 	background: rgba(11, 58, 96, 0.28);
@@ -116,6 +142,10 @@ body.vp-classic #search-box.vp-search-header {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	justify-self: end;
+	align-self: start;
+	width: 100%;
+	max-width: 220px;
 }
 
 .vpark-header-right-ad__title {
@@ -131,24 +161,153 @@ body.vp-classic #search-box.vp-search-header {
 	line-height: 1.2;
 }
 
-.vpark-ad-slot {
-	margin: 0 0 12px 0;
-	padding: 12px 14px;
-	border: 1px dashed #7b8ea3;
-	border-radius: 8px;
-	background: linear-gradient(90deg, #f3f7fb 0%, #edf5fb 100%);
+.vpark-nav-search-item {
+	padding-top: 0;
 }
 
-.vpark-ad-slot__title {
-	font-size: 14px;
+.vpark-nav-search-form {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+	margin-left: 4px;
+}
+
+.vpark-nav-search-form input[type="search"] {
+	width: 260px;
+	height: 46px;
+	padding: 0 14px;
+	border: 1px solid #aebecd;
+	border-right: 0;
+	border-radius: 10px 0 0 10px;
+	font-size: 17px;
+	line-height: 46px;
+	color: #35597d;
+	background: #edf1f4;
+}
+
+.vpark-nav-search-form button,
+.vpark-nav-search-adv {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 58px;
+	height: 46px;
+	border: 1px solid #aebecd;
+	background: #eceff3;
+	color: #667888;
+	cursor: pointer;
+	text-decoration: none;
+	margin-left: -1px;
+}
+
+.vpark-nav-search-form button {
+	border-radius: 0;
+	padding: 0;
+}
+
+.vpark-nav-search-adv {
+	border-radius: 0 10px 10px 0;
+}
+
+.vpark-nav-search-form button:hover,
+.vpark-nav-search-adv:hover {
+	background: #dfe6ed;
+	color: #4a6077;
+	text-decoration: none;
+}
+
+.vpark-nav-search-item > form,
+.vpark-nav-search-item > a {
+	padding: 0;
+}
+
+.vpark-nav-quick-login {
+	padding-top: 0;
+}
+
+.vpark-nav-quick-login__form {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+#vpark-nav-username {
+	width: 144px;
+}
+
+#vpark-nav-password {
+	width: 144px;
+}
+
+.vpark-nav-quick-login__form input {
+	height: 24px;
+	padding: 0 8px;
+	border: 1px solid #9eb4c9;
+	border-radius: 4px;
+	font-size: 1.1em;
+	font-weight: 400;
+	color: #375375;
+	background: #fff;
+	line-height: 24px;
+	box-shadow: none;
+}
+
+.vpark-nav-quick-login__form button {
+	height: 24px;
+	padding: 0 12px;
+	border: 1px solid #6e8397;
+	border-radius: 4px;
+	background: #f8fbff;
+	color: #2f4e6c;
+	font-size: 1.1em;
 	font-weight: 700;
-	color: #1c4f7c;
-	margin-bottom: 4px;
+	cursor: pointer;
+	line-height: 24px;
+	text-shadow: none;
+	box-shadow: none;
 }
 
-.vpark-ad-slot__desc {
-	font-size: 12px;
-	color: #4d6377;
+.vpark-nav-quick-login__form button:hover {
+	background: #edf3f9;
+}
+
+.vpark-home-ad-slot {
+	margin: 0 0 12px 0;
+	padding: 14px 18px;
+	border: 2px dashed #8da6bf;
+	border-radius: 14px;
+	background: linear-gradient(180deg, #eef4fa 0%, #e7eff7 100%);
+}
+
+.vpark-home-ad-slot__title {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.15;
+	color: #1d4f81;
+}
+
+.vpark-home-ad-slot__desc {
+	margin-top: 6px;
+	font-size: 13px;
+	line-height: 1.25;
+	color: #4e6480;
+}
+
+.vpark-home-ad-slot__media-link {
+	display: block;
+}
+
+.vpark-home-ad-slot__media {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 200px;
+	object-fit: cover;
+	border-radius: 10px;
 }
 
 .vpark-breaking-news {
@@ -182,7 +341,7 @@ body.vp-classic #search-box.vp-search-header {
 	align-items: center;
 	gap: 12px;
 	min-width: max-content;
-	animation: vparkTicker 50s linear infinite;
+	animation: vparkTicker 720s linear infinite;
 }
 
 .vpark-breaking-news:hover .vpark-breaking-news__track {
@@ -217,6 +376,73 @@ body.vp-classic #search-box.vp-search-header {
 	100% {
 		transform: translateX(-50%);
 	}
+}
+
+.vpark-home-news {
+	margin: 0 0 12px 0;
+	padding: 10px 12px 12px;
+	border: 1px solid #c5d8ea;
+	border-radius: 6px;
+	background: #fbfdff;
+}
+
+.vpark-home-news__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 8px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #d5e4f2;
+}
+
+.vpark-home-news__title {
+	margin: 0;
+	font-size: 18px;
+	color: #1b4f7b;
+}
+
+.vpark-home-news__more {
+	font-size: 12px;
+	color: #2b6696;
+	text-decoration: none;
+}
+
+.vpark-home-news__more:hover {
+	text-decoration: underline;
+}
+
+.vpark-home-news__grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+}
+
+.vpark-home-news__col {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.vpark-home-news__item {
+	margin: 0 0 4px 0;
+	line-height: 1.35;
+}
+
+.vpark-home-news__item a {
+	font-size: 16px;
+	color: #103fca;
+	text-decoration: none;
+}
+
+.vpark-home-news__item a:hover {
+	text-decoration: underline;
+}
+
+.vpark-home-news__empty {
+	font-size: 13px;
+	color: #5d7083;
+	padding: 6px 0;
 }
 
 .vpark-forum-panel {
@@ -284,20 +510,53 @@ body.vp-classic #search-box.vp-search-header {
 }
 
 @media (max-width: 1220px) {
-	body.vp-classic #page-header .vp-headerbar > .inner {
-		grid-template-columns: 240px minmax(0, 1fr);
+	body#phpbb #page-header .headerbar > .inner {
+		grid-template-columns: 220px minmax(0, 1fr) 200px;
 		grid-template-areas:
-			"brand ad"
-			"center center";
+			"brand center ad";
 	}
 
 	.vpark-header-forum-compact {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 	}
+
+	.vpark-nav-search-form input[type="search"] {
+		width: 190px;
+		height: 38px;
+		font-size: 14px;
+		line-height: 38px;
+	}
+
+	.vpark-nav-search-form button,
+	.vpark-nav-search-adv {
+		width: 46px;
+		height: 38px;
+	}
+
+	#vpark-nav-username {
+		width: 118px;
+	}
+
+	#vpark-nav-password {
+		width: 118px;
+	}
+
+	.vpark-nav-quick-login__form input,
+	.vpark-nav-quick-login__form button {
+		height: 24px;
+		line-height: 24px;
+		font-size: 1.1em;
+	}
+}
+
+@media (max-width: 980px) {
+	.vpark-nav-quick-login {
+		display: none;
+	}
 }
 
 @media (max-width: 700px) {
-	body.vp-classic #page-header .vp-headerbar > .inner {
+	body#phpbb #page-header .headerbar > .inner {
 		grid-template-columns: 1fr;
 		grid-template-areas:
 			"brand"
@@ -305,23 +564,50 @@ body.vp-classic #search-box.vp-search-header {
 			"center";
 	}
 
-	body.vp-classic #site-description.vp-site-description {
-		grid-template-columns: 62px minmax(0, 1fr);
+	body#phpbb #site-description {
+		grid-template-columns: 64px minmax(0, 1fr);
+		padding: 6px 8px;
 	}
 
-	body.vp-classic #site-description .site_logo {
-		width: 62px;
-		height: 62px;
-		background-size: 62px 62px;
+	body#phpbb #site-description .logo {
+		width: 64px;
+		min-height: 58px;
 	}
 
-	body.vp-classic #site-description h1 {
+	body#phpbb #site-description .site_logo {
+		width: 44px;
+		height: 44px;
+		background-size: 44px 44px;
+	}
+
+	body#phpbb #site-description h1 {
 		max-width: none;
-		font-size: 2.6em;
+		font-size: 1.52em;
 	}
 
 	.vpark-header-forum-compact {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.vpark-nav-search-item {
+		display: none;
+	}
+
+	.vpark-nav-quick-login {
+		display: none;
+	}
+
+	.vpark-home-ad-slot {
+		padding: 10px 12px;
+		border-radius: 10px;
+	}
+
+	.vpark-home-ad-slot__title {
+		font-size: 14px;
+	}
+
+	.vpark-home-ad-slot__desc {
+		font-size: 12px;
 	}
 
 	.vpark-breaking-news {
@@ -332,6 +618,15 @@ body.vp-classic #search-box.vp-search-header {
 		display: block;
 		border-right: 0;
 		border-bottom: 1px solid #bfd1e2;
+	}
+
+	.vpark-home-news__grid {
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+
+	.vpark-home-news__item a {
+		font-size: 14px;
 	}
 }
 </style>

@@ -81,6 +81,10 @@ class listener implements EventSubscriberInterface
 		$use_east_asian_title = $this->is_east_asian_lang($lang);
 		$site_title = $use_east_asian_title ? '维园网' : 'Victoria Park';
 		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
+		$home_ad_target = trim((string) getenv('VPARK_HOME_AD_URL'));
+		$home_ad_image = trim((string) getenv('VPARK_HOME_AD_IMAGE_URL'));
+		$home_ad_custom_title = trim((string) getenv('VPARK_HOME_AD_TITLE'));
+		$home_ad_custom_desc = trim((string) getenv('VPARK_HOME_AD_DESC'));
 
 		$this->template->assign_vars(array(
 			'S_VPARK_PORTAL_ENABLED' => $portal_enabled,
@@ -101,10 +105,15 @@ class listener implements EventSubscriberInterface
 			'S_VPARK_LANG_ES' => $lang === 'es_x_tu',
 			'S_VPARK_LANG_EN_GB' => $lang === 'en',
 			'S_VPARK_INDEX_PAGE' => $this->is_index_page(),
+			'U_VPARK_HOME_AD_TARGET' => $home_ad_target,
+			'VPARK_HOME_AD_IMAGE_URL' => $home_ad_image,
+			'VPARK_HOME_AD_CUSTOM_TITLE' => $home_ad_custom_title,
+			'VPARK_HOME_AD_CUSTOM_DESC' => $home_ad_custom_desc,
 		));
 
 		$this->assign_forum_panel_items();
 		$this->assign_breaking_news_items();
+		$this->assign_home_news_items();
 	}
 
 	public function assign_topic_summary_link($event)
@@ -284,6 +293,118 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	protected function assign_home_news_items()
+	{
+		if (!$this->is_index_page())
+		{
+			return;
+		}
+
+		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
+		$news_forum = $this->first_forum_by_names(array(
+			'新闻',
+			'VictoriaPark新闻',
+			'VictoriaPark.io新闻',
+			'新闻速递',
+		));
+
+		$rows = array();
+		$news_forum_url = $index_url;
+
+		if ($news_forum)
+		{
+			$news_forum_url = append_sid(
+				"{$this->phpbb_root_path}viewforum.{$this->php_ext}",
+				'f=' . (int) $news_forum['forum_id']
+			);
+
+			$sql = 'SELECT t.topic_id, t.topic_title, t.forum_id, f.forum_name
+				FROM ' . TOPICS_TABLE . ' t
+				JOIN ' . FORUMS_TABLE . ' f
+					ON f.forum_id = t.forum_id
+				WHERE t.topic_moved_id = 0
+					AND t.forum_id = ' . (int) $news_forum['forum_id'] . '
+				ORDER BY t.topic_last_post_time DESC';
+			$result = $this->db->sql_query_limit($sql, 40);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$rows[] = $row;
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		if (empty($rows))
+		{
+			$panel_items = $this->forum_panel_items();
+			$forum_names = array();
+			foreach ($panel_items as $item)
+			{
+				$forum_names[] = (string) $item['title'];
+			}
+
+			if (!empty($forum_names))
+			{
+				$sql = 'SELECT t.topic_id, t.topic_title, t.forum_id, f.forum_name
+					FROM ' . TOPICS_TABLE . ' t
+					JOIN ' . FORUMS_TABLE . ' f
+						ON f.forum_id = t.forum_id
+					WHERE t.topic_moved_id = 0
+						AND ' . $this->db->sql_in_set('f.forum_name', $forum_names) . '
+					ORDER BY t.topic_last_post_time DESC';
+				$result = $this->db->sql_query_limit($sql, 40);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$rows[] = $row;
+				}
+				$this->db->sql_freeresult($result);
+			}
+		}
+
+		$first_forum_id = 0;
+		if (!empty($rows))
+		{
+			if (isset($rows[0]['forum_id']))
+			{
+				$first_forum_id = (int) $rows[0]['forum_id'];
+			}
+			elseif (isset($rows[0]['FORUM_ID']))
+			{
+				$first_forum_id = (int) $rows[0]['FORUM_ID'];
+			}
+		}
+
+		if ($news_forum_url === $index_url && $first_forum_id > 0)
+		{
+			$news_forum_url = append_sid(
+				"{$this->phpbb_root_path}viewforum.{$this->php_ext}",
+				'f=' . $first_forum_id
+			);
+		}
+
+		$this->template->assign_vars(array(
+			'U_VPARK_NEWS_FORUM' => $news_forum_url,
+			'S_VPARK_HOME_NEWS' => !empty($rows),
+		));
+
+		$counter = 0;
+		foreach ($rows as $row)
+		{
+			$title = trim((string) $row['topic_title']);
+			if ($title === '')
+			{
+				continue;
+			}
+
+			$block = ($counter % 2 === 0) ? 'vpark_home_news_left' : 'vpark_home_news_right';
+			$this->template->assign_block_vars($block, array(
+				'TITLE' => $title,
+				'FORUM_NAME' => (string) $row['forum_name'],
+				'U_TOPIC' => append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", 't=' . (int) $row['topic_id']),
+			));
+			$counter++;
+		}
+	}
+
 	protected function forum_panel_items()
 	{
 		return array(
@@ -333,6 +454,39 @@ class listener implements EventSubscriberInterface
 		$this->db->sql_freeresult($result);
 
 		return $links;
+	}
+
+	protected function first_forum_by_names(array $forum_names)
+	{
+		if (empty($forum_names))
+		{
+			return null;
+		}
+
+		$sql = 'SELECT forum_id, forum_name
+			FROM ' . FORUMS_TABLE . '
+			WHERE forum_type = ' . FORUM_POST . '
+				AND ' . $this->db->sql_in_set('forum_name', $forum_names);
+		$result = $this->db->sql_query($sql);
+		$rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[(string) $row['forum_name']] = array(
+				'forum_id' => (int) $row['forum_id'],
+				'forum_name' => (string) $row['forum_name'],
+			);
+		}
+		$this->db->sql_freeresult($result);
+
+		foreach ($forum_names as $forum_name)
+		{
+			if (isset($rows[$forum_name]))
+			{
+				return $rows[$forum_name];
+			}
+		}
+
+		return null;
 	}
 
 	protected function normalize_supported_lang($lang)

@@ -1,12 +1,23 @@
-<div class="vpark-ad-slot">
-	{% if S_VPARK_INDEX_PAGE %}
-		<div class="vpark-ad-slot__title">{{ lang('VPARK_AD_SLOT_HOME_TITLE') }}</div>
-		<div class="vpark-ad-slot__desc">{{ lang('VPARK_AD_SLOT_HOME_DESC') }}</div>
+{% if S_VPARK_INDEX_PAGE %}
+<section class="vpark-home-ad-slot" aria-label="{{ lang('VPARK_AD_SLOT_HOME_TITLE') }}">
+	{% if VPARK_HOME_AD_IMAGE_URL %}
+		{% if U_VPARK_HOME_AD_TARGET %}
+			<a class="vpark-home-ad-slot__media-link" href="{{ U_VPARK_HOME_AD_TARGET }}" target="_blank" rel="noopener noreferrer">
+		{% endif %}
+		<img class="vpark-home-ad-slot__media" src="{{ VPARK_HOME_AD_IMAGE_URL }}" alt="{% if VPARK_HOME_AD_CUSTOM_TITLE %}{{ VPARK_HOME_AD_CUSTOM_TITLE }}{% else %}{{ lang('VPARK_AD_SLOT_HOME_TITLE') }}{% endif %}" />
+		{% if U_VPARK_HOME_AD_TARGET %}
+			</a>
+		{% endif %}
 	{% else %}
-		<div class="vpark-ad-slot__title">{{ lang('VPARK_AD_SLOT_SUB_TITLE') }}</div>
-		<div class="vpark-ad-slot__desc">{{ lang('VPARK_AD_SLOT_SUB_DESC') }}</div>
+		<div class="vpark-home-ad-slot__title">
+			{% if VPARK_HOME_AD_CUSTOM_TITLE %}{{ VPARK_HOME_AD_CUSTOM_TITLE }}{% else %}{{ lang('VPARK_AD_SLOT_HOME_TITLE') }}{% endif %}
+		</div>
+		<div class="vpark-home-ad-slot__desc">
+			{% if VPARK_HOME_AD_CUSTOM_DESC %}{{ VPARK_HOME_AD_CUSTOM_DESC }}{% else %}{{ lang('VPARK_AD_SLOT_HOME_DESC') }}{% endif %}
+		</div>
 	{% endif %}
-</div>
+</section>
+{% endif %}
 
 <div class="vpark-breaking-news" aria-label="{{ lang('VPARK_BREAKING_LABEL') }}">
 	<div class="vpark-breaking-news__label">{{ lang('VPARK_BREAKING_LABEL') }}</div>
@@ -29,3 +40,32 @@
 		</div>
 	</div>
 </div>
+
+{% if S_VPARK_INDEX_PAGE %}
+<section class="vpark-home-news" aria-label="{{ lang('VPARK_HOME_NEWS_TITLE') }}">
+	<div class="vpark-home-news__head">
+		<h3 class="vpark-home-news__title">{{ lang('VPARK_HOME_NEWS_TITLE') }}</h3>
+		<a class="vpark-home-news__more" href="{{ U_VPARK_NEWS_FORUM }}">{{ lang('VPARK_HOME_NEWS_MORE') }}</a>
+	</div>
+	<div class="vpark-home-news__grid">
+		<ul class="vpark-home-news__col">
+			{% for item in vpark_home_news_left %}
+				<li class="vpark-home-news__item">
+					<a href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+				</li>
+			{% else %}
+				<li class="vpark-home-news__empty">{{ lang('VPARK_HOME_NEWS_EMPTY') }}</li>
+			{% endfor %}
+		</ul>
+		<ul class="vpark-home-news__col">
+			{% for item in vpark_home_news_right %}
+				<li class="vpark-home-news__item">
+					<a href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+				</li>
+			{% else %}
+				<li class="vpark-home-news__empty">{{ lang('VPARK_HOME_NEWS_EMPTY') }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+</section>
+{% endif %}
