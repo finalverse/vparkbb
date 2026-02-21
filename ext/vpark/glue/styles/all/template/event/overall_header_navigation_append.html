@@ -5,3 +5,17 @@
 	</a>
 </li>
 {% endif %}
+{% if not S_IS_BOT %}
+<li class="vpark-nav-search-item" data-skip-responsive="true">
+	<form action="{{ U_SEARCH }}" method="get" class="vpark-nav-search-form" role="search">
+		<input name="keywords" type="search" maxlength="128" title="{{ lang('SEARCH_KEYWORDS') }}" value="{{ SEARCH_WORDS }}" placeholder="{{ lang('SEARCH_MINI') }}" />
+		<button type="submit" title="{{ lang('SEARCH') }}">
+			<i class="icon fa-search fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH') }}</span>
+		</button>
+		<a href="{{ U_SEARCH }}" class="vpark-nav-search-adv" title="{{ lang('SEARCH_ADV') }}">
+			<i class="icon fa-cog fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH_ADV') }}</span>
+		</a>
+		{{ S_SEARCH_HIDDEN_FIELDS }}
+	</form>
+</li>
+{% endif %}

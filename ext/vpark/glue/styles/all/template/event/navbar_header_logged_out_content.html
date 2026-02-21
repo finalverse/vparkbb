@@ -1,0 +1,9 @@
+<li class="rightside vpark-nav-quick-login" data-skip-responsive="true">
+	<form method="post" action="{{ S_LOGIN_ACTION }}" class="vpark-nav-quick-login__form" role="form">
+		<input type="text" name="username" id="vpark-nav-username" title="{{ lang('USERNAME') }}" placeholder="{{ lang('USERNAME') }}" autocomplete="username" />
+		<input type="password" name="password" id="vpark-nav-password" title="{{ lang('PASSWORD') }}" placeholder="{{ lang('PASSWORD') }}" autocomplete="current-password" />
+		<button type="submit" name="login">{{ lang('LOGIN') }}</button>
+		{{ S_LOGIN_REDIRECT }}
+		{{ S_FORM_TOKEN_LOGIN }}
+	</form>
+</li>
