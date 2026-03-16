@@ -1,16 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="vpClassicTitle vpClassicDesc">
-  <title id="vpClassicTitle">Victoria Park</title>
-  <desc id="vpClassicDesc">Victoria Park icon logo</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="64" viewBox="0 0 200 64" role="img" aria-labelledby="vpTitle vpDesc">
+  <title id="vpTitle">Victoria Park - 维园网</title>
+  <desc id="vpDesc">Victoria Park community logo</desc>
   <defs>
-    <linearGradient id="vpBgClassic" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#36b4f8"/>
-      <stop offset="100%" stop-color="#0b71b8"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2b6cb0"/>
+      <stop offset="100%" stop-color="#1a365d"/>
     </linearGradient>
-    <linearGradient id="vpStrokeClassic" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f3fbff"/>
-      <stop offset="100%" stop-color="#d5ecfb"/>
+    <linearGradient id="vGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#bee3f8"/>
     </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect x="2.5" y="2.5" width="59" height="59" rx="14" fill="url(#vpBgClassic)" stroke="url(#vpStrokeClassic)" stroke-width="3"/>
-  <path d="M16 17h11l9 22 9-22h11L36 52z" fill="#ffffff"/>
+  <!-- Icon: rounded square background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bg)"/>
+  <!-- Inner border -->
+  <rect x="3.5" y="3.5" width="57" height="57" rx="12.5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- V lettermark -->
+  <path d="M17 14h7.5l7.5 24 7.5-24H47L32 52z" fill="url(#vGrad)" filter="url(#glow)"/>
+  <!-- Accent bar under V -->
+  <rect x="22" y="54" width="20" height="2" rx="1" fill="#4299e1" opacity="0.8"/>
+  <!-- Text: 维园网 -->
+  <text x="72" y="30" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" font-weight="700" fill="#1a365d" letter-spacing="2">维园网</text>
+  <!-- Text: VictoriaPark -->
+  <text x="72" y="50" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="500" fill="#4a5568" letter-spacing="1.5">VictoriaPark</text>
 </svg>

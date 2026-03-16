@@ -1,35 +1,42 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── Header grid ── */
 body#phpbb #page-header .headerbar {
-	padding: 8px 10px;
+	padding: 12px 16px;
 }
 
 body#phpbb #page-header .headerbar > .inner {
 	display: grid;
-	grid-template-columns: minmax(230px, 250px) minmax(0, 1fr) minmax(220px, 240px);
+	grid-template-columns: minmax(230px, 260px) minmax(0, 1fr) minmax(220px, 240px);
 	grid-template-areas: "brand center ad";
-	gap: 10px;
+	gap: 14px;
 	align-items: start;
 }
 
+/* ── Brand / logo ── */
 body#phpbb #site-description {
 	grid-area: brand;
 	float: none;
 	width: auto;
 	margin: 0;
-	padding: 6px 10px 6px 8px;
+	padding: 10px 14px 10px 10px;
 	display: grid;
-	grid-template-columns: 88px minmax(0, 1fr);
+	grid-template-columns: 80px minmax(0, 1fr);
 	grid-template-areas:
 		"logo title"
 		"logo desc";
-	column-gap: 8px;
+	column-gap: 10px;
 	row-gap: 2px;
 	align-items: center;
 	align-self: start;
-	border-radius: 10px;
-	border: 1px solid rgba(191, 223, 248, 0.35);
-	background: linear-gradient(180deg, rgba(17, 95, 151, 0.34) 0%, rgba(13, 71, 116, 0.28) 100%);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.17);
+	border-radius: 16px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 body#phpbb #site-description .logo {
@@ -37,32 +44,32 @@ body#phpbb #site-description .logo {
 	float: none;
 	padding: 0;
 	margin: 0;
-	width: 88px;
-	min-height: 74px;
+	width: 80px;
+	min-height: 68px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 16px;
-	background: rgba(255, 255, 255, 0.06);
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.1);
 }
 
 body#phpbb #site-description .site_logo {
-	width: 54px;
-	height: 54px;
-	background-size: 54px 54px;
+	width: 52px;
+	height: 52px;
+	background-size: 52px 52px;
 }
 
 body#phpbb #site-description h1 {
 	grid-area: title;
 	margin: 0;
 	max-width: 100%;
-	font-size: 2.28em;
+	font-size: 1.75em;
 	font-weight: 700;
-	line-height: 1;
-	letter-spacing: 0.01em;
+	line-height: 1.1;
+	letter-spacing: -0.01em;
 	white-space: normal;
-	color: #f3f8ff;
-	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.14);
+	color: #ffffff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 	text-align: center;
 	justify-self: center;
 	width: 100%;
@@ -71,9 +78,9 @@ body#phpbb #site-description h1 {
 body#phpbb #site-description > p:not(.skiplink) {
 	grid-area: desc;
 	margin: 0;
-	font-size: 0.98em;
-	line-height: 1.15;
-	color: #e1f0ff;
+	font-size: 0.88em;
+	line-height: 1.2;
+	color: rgba(237, 242, 247, 0.85);
 	text-align: center;
 	justify-self: center;
 	width: 100%;
@@ -87,13 +94,14 @@ body#phpbb #search-box.search-header {
 	display: none;
 }
 
+/* ── Header center: forum compact nav ── */
 .vpark-header-center {
 	grid-area: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	align-self: start;
-	margin-top: 1px;
+	margin-top: 2px;
 	min-width: 0;
 }
 
@@ -102,43 +110,51 @@ body#phpbb #search-box.search-header {
 	max-width: 790px;
 	display: grid;
 	grid-template-columns: repeat(5, minmax(0, 1fr));
-	gap: 4px;
-	padding: 6px;
-	border: 1px solid rgba(192, 220, 247, 0.62);
-	border-radius: 6px;
-	background: rgba(15, 65, 108, 0.26);
+	gap: 6px;
+	padding: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 }
 
 .vpark-header-forum-compact__item {
 	display: block;
-	padding: 4px 5px;
-	border: 1px solid rgba(183, 214, 242, 0.58);
-	border-radius: 3px;
-	background: rgba(14, 74, 121, 0.42);
-	color: #eaf4ff;
-	font-size: 12px;
-	font-weight: 700;
+	padding: 6px 8px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.06);
+	color: #edf2f7;
+	font-size: 13px;
+	font-weight: 600;
 	text-align: center;
-	line-height: 1.2;
+	line-height: 1.25;
 	text-decoration: none;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	transition: all 0.2s ease;
 }
 
 .vpark-header-forum-compact__item:hover {
 	text-decoration: none;
-	background: rgba(20, 92, 148, 0.52);
+	background: rgba(255, 255, 255, 0.16);
+	border-color: rgba(255, 255, 255, 0.25);
+	transform: translateY(-1px);
 }
 
+/* ── Header right ad ── */
 .vpark-header-right-ad {
 	grid-area: ad;
 	min-height: 72px;
-	padding: 8px 9px;
-	border: 1px dashed rgba(203, 225, 247, 0.74);
-	border-radius: 6px;
-	background: rgba(11, 58, 96, 0.28);
-	color: #eaf4ff;
+	padding: 10px 12px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	color: #edf2f7;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -151,16 +167,17 @@ body#phpbb #search-box.search-header {
 .vpark-header-right-ad__title {
 	font-size: 13px;
 	font-weight: 700;
-	line-height: 1.25;
+	line-height: 1.3;
 }
 
 .vpark-header-right-ad__desc {
-	margin-top: 2px;
+	margin-top: 4px;
 	font-size: 12px;
-	color: #d6e8fa;
-	line-height: 1.2;
+	color: rgba(237, 242, 247, 0.75);
+	line-height: 1.25;
 }
 
+/* ── Nav search ── */
 .vpark-nav-search-item {
 	padding-top: 0;
 }
@@ -169,20 +186,26 @@ body#phpbb #search-box.search-header {
 	display: inline-flex;
 	align-items: center;
 	gap: 0;
-	margin-left: 2px;
+	margin-left: 4px;
 }
 
 .vpark-nav-search-form input[type="search"] {
-	width: 210px;
-	height: 24px;
-	padding: 0 8px;
-	border: 1px solid #9eb4c9;
+	width: 220px;
+	height: 32px;
+	padding: 0 10px;
+	border: 1px solid #cbd5e0;
 	border-right: 0;
-	border-radius: 4px 0 0 4px;
-	font-size: 1.1em;
-	line-height: 24px;
-	color: #2f4e6c;
+	border-radius: 8px 0 0 8px;
+	font-size: 13px;
+	line-height: 32px;
+	color: #2d3748;
 	background: #fff;
+	transition: border-color 0.15s ease;
+}
+
+.vpark-nav-search-form input[type="search"]:focus {
+	border-color: #4299e1;
+	outline: none;
 }
 
 .vpark-nav-search-form button,
@@ -190,14 +213,15 @@ body#phpbb #search-box.search-header {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 26px;
-	height: 24px;
-	border: 1px solid #9eb4c9;
-	background: #f8fbff;
-	color: #5c748d;
+	width: 32px;
+	height: 32px;
+	border: 1px solid #cbd5e0;
+	background: #f7fafc;
+	color: #4a5568;
 	cursor: pointer;
 	text-decoration: none;
 	margin-left: -1px;
+	transition: all 0.15s ease;
 }
 
 .vpark-nav-search-form button {
@@ -206,18 +230,18 @@ body#phpbb #search-box.search-header {
 }
 
 .vpark-nav-search-adv {
-	border-radius: 0 4px 4px 0;
+	border-radius: 0 8px 8px 0;
 }
 
 .vpark-nav-search-form button:hover,
 .vpark-nav-search-adv:hover {
-	background: #edf3f9;
-	color: #365875;
+	background: #edf2f7;
+	color: #2d3748;
 	text-decoration: none;
 }
 
 .vpark-nav-search-form input[type="search"]::placeholder {
-	color: #7e8fa1;
+	color: #a0aec0;
 }
 
 .vpark-nav-search-item > form,
@@ -225,6 +249,7 @@ body#phpbb #search-box.search-header {
 	padding: 0;
 }
 
+/* ── Quick login ── */
 .vpark-nav-quick-login {
 	padding-top: 0;
 }
@@ -232,7 +257,7 @@ body#phpbb #search-box.search-header {
 .vpark-nav-quick-login__form {
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
+	gap: 8px;
 	padding: 0;
 	border: 0;
 	border-radius: 0;
@@ -240,65 +265,74 @@ body#phpbb #search-box.search-header {
 }
 
 #vpark-nav-username {
-	width: 144px;
+	width: 140px;
 }
 
 #vpark-nav-password {
-	width: 144px;
+	width: 140px;
 }
 
 .vpark-nav-quick-login__form input {
-	height: 24px;
-	padding: 0 8px;
-	border: 1px solid #9eb4c9;
-	border-radius: 4px;
-	font-size: 1.1em;
+	height: 32px;
+	padding: 0 10px;
+	border: 1px solid #cbd5e0;
+	border-radius: 8px;
+	font-size: 13px;
 	font-weight: 400;
-	color: #375375;
+	color: #2d3748;
 	background: #fff;
-	line-height: 24px;
+	line-height: 32px;
 	box-shadow: none;
+	transition: border-color 0.15s ease;
+}
+
+.vpark-nav-quick-login__form input:focus {
+	border-color: #4299e1;
+	outline: none;
 }
 
 .vpark-nav-quick-login__form button {
-	height: 24px;
-	padding: 0 12px;
-	border: 1px solid #6e8397;
-	border-radius: 4px;
-	background: #f8fbff;
-	color: #2f4e6c;
-	font-size: 1.1em;
-	font-weight: 700;
+	height: 32px;
+	padding: 0 16px;
+	border: 1px solid #cbd5e0;
+	border-radius: 8px;
+	background: #fff;
+	color: #2d3748;
+	font-size: 13px;
+	font-weight: 600;
 	cursor: pointer;
-	line-height: 24px;
+	line-height: 32px;
 	text-shadow: none;
 	box-shadow: none;
+	transition: all 0.15s ease;
 }
 
 .vpark-nav-quick-login__form button:hover {
-	background: #edf3f9;
+	background: #edf2f7;
+	border-color: #a0aec0;
 }
 
+/* ── Home ad slot ── */
 .vpark-home-ad-slot {
-	margin: 0 0 12px 0;
-	padding: 14px 18px;
-	border: 2px dashed #8da6bf;
-	border-radius: 14px;
-	background: linear-gradient(180deg, #eef4fa 0%, #e7eff7 100%);
+	margin: 0 0 16px 0;
+	padding: 16px 20px;
+	border: 2px dashed #cbd5e0;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
 }
 
 .vpark-home-ad-slot__title {
 	font-size: 16px;
 	font-weight: 700;
-	line-height: 1.15;
-	color: #1d4f81;
+	line-height: 1.2;
+	color: #2d3748;
 }
 
 .vpark-home-ad-slot__desc {
 	margin-top: 6px;
 	font-size: 13px;
-	line-height: 1.25;
-	color: #4e6480;
+	line-height: 1.35;
+	color: #718096;
 }
 
 .vpark-home-ad-slot__media-link {
@@ -314,36 +348,39 @@ body#phpbb #search-box.search-header {
 	border-radius: 10px;
 }
 
+/* ── Breaking news ticker ── */
 .vpark-breaking-news {
-	margin: 0 0 12px 0;
+	margin: 0 0 16px 0;
 	display: flex;
 	align-items: center;
-	border: 1px solid #bfcfdf;
-	border-radius: 6px;
-	background: #f7fbff;
+	border: 1px solid var(--vp-border, #e2e8f0);
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: var(--vp-shadow, 0 1px 3px rgba(0,0,0,0.08));
+	overflow: hidden;
 }
 
 .vpark-breaking-news__label {
 	flex: 0 0 auto;
-	padding: 8px 12px;
+	padding: 10px 16px;
 	font-size: 13px;
 	font-weight: 700;
-	color: #174a75;
-	background: #e6f1fb;
-	border-right: 1px solid #bfd1e2;
+	color: #2b6cb0;
+	background: #ebf8ff;
+	border-right: 1px solid #bee3f8;
 }
 
 .vpark-breaking-news__viewport {
 	flex: 1 1 auto;
 	overflow: hidden;
 	white-space: nowrap;
-	padding: 0 10px;
+	padding: 0 14px;
 }
 
 .vpark-breaking-news__track {
 	display: inline-flex;
 	align-items: center;
-	gap: 12px;
+	gap: 16px;
 	min-width: max-content;
 	animation: vparkTicker 720s linear infinite;
 }
@@ -354,23 +391,25 @@ body#phpbb #search-box.search-header {
 
 .vpark-breaking-news__item {
 	display: inline-block;
-	color: #134f86;
+	color: #3182ce;
 	font-size: 13px;
 	text-decoration: none;
+	transition: color 0.15s ease;
 }
 
 .vpark-breaking-news__item:hover {
+	color: #2b6cb0;
 	text-decoration: underline;
 }
 
 .vpark-breaking-news__sep {
-	color: #7d8ea0;
+	color: #cbd5e0;
 }
 
 .vpark-breaking-news--empty {
-	padding: 8px 12px;
+	padding: 10px 16px;
 	font-size: 13px;
-	color: #5f7182;
+	color: #a0aec0;
 }
 
 @keyframes vparkTicker {
@@ -382,12 +421,14 @@ body#phpbb #search-box.search-header {
 	}
 }
 
+/* ── Home news section ── */
 .vpark-home-news {
-	margin: 0 0 12px 0;
-	padding: 10px 12px 12px;
-	border: 1px solid #c5d8ea;
-	border-radius: 6px;
-	background: #fbfdff;
+	margin: 0 0 16px 0;
+	padding: 14px 16px 16px;
+	border: 1px solid var(--vp-border, #e2e8f0);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--vp-shadow, 0 1px 3px rgba(0,0,0,0.08));
 }
 
 .vpark-home-news__head {
@@ -395,31 +436,35 @@ body#phpbb #search-box.search-header {
 	align-items: baseline;
 	justify-content: space-between;
 	gap: 12px;
-	margin-bottom: 8px;
-	padding-bottom: 6px;
-	border-bottom: 1px solid #d5e4f2;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #edf2f7;
 }
 
 .vpark-home-news__title {
 	margin: 0;
 	font-size: 18px;
-	color: #1b4f7b;
+	font-weight: 700;
+	color: #1a202c;
 }
 
 .vpark-home-news__more {
-	font-size: 12px;
-	color: #2b6696;
+	font-size: 13px;
+	color: #3182ce;
 	text-decoration: none;
+	font-weight: 500;
+	transition: color 0.15s ease;
 }
 
 .vpark-home-news__more:hover {
+	color: #2b6cb0;
 	text-decoration: underline;
 }
 
 .vpark-home-news__grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 14px;
+	gap: 16px;
 }
 
 .vpark-home-news__col {
@@ -429,95 +474,113 @@ body#phpbb #search-box.search-header {
 }
 
 .vpark-home-news__item {
-	margin: 0 0 4px 0;
-	line-height: 1.35;
+	margin: 0 0 6px 0;
+	line-height: 1.45;
 }
 
 .vpark-home-news__item a {
-	font-size: 16px;
-	color: #103fca;
+	font-size: 15px;
+	color: #2d3748;
 	text-decoration: none;
+	transition: color 0.15s ease;
 }
 
 .vpark-home-news__item a:hover {
+	color: #3182ce;
 	text-decoration: underline;
 }
 
 .vpark-home-news__empty {
 	font-size: 13px;
-	color: #5d7083;
-	padding: 6px 0;
+	color: #a0aec0;
+	padding: 8px 0;
 }
 
+/* ── Forum panel ── */
 .vpark-forum-panel {
-	margin: 0 0 12px 0;
-	padding: 12px;
-	border: 1px solid #c2d2e3;
-	border-radius: 8px;
-	background: #f8fbff;
+	margin: 0 0 16px 0;
+	padding: 16px;
+	border: 1px solid var(--vp-border, #e2e8f0);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--vp-shadow, 0 1px 3px rgba(0,0,0,0.08));
 }
 
 .vpark-forum-panel__title {
-	margin: 0 0 6px 0;
-	font-size: 16px;
-	color: #1e4f79;
+	margin: 0 0 4px 0;
+	font-size: 18px;
+	font-weight: 700;
+	color: #1a202c;
 }
 
 .vpark-forum-panel__subtitle {
-	margin: 0 0 10px 0;
-	font-size: 12px;
-	color: #5d6f82;
+	margin: 0 0 12px 0;
+	font-size: 13px;
+	color: #718096;
 }
 
 .vpark-forum-panel__grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 8px;
+	gap: 10px;
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
 .vpark-forum-panel__item {
-	padding: 8px 10px;
-	border: 1px solid #d2e1ef;
-	border-radius: 6px;
-	background: #fff;
+	padding: 12px 14px;
+	border: 1px solid #edf2f7;
+	border-radius: 10px;
+	background: #f7fafc;
+	transition: all 0.2s ease;
+}
+
+.vpark-forum-panel__item:hover {
+	border-color: #bee3f8;
+	background: #ebf8ff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+	transform: translateY(-1px);
 }
 
 .vpark-forum-panel__item-title {
 	display: inline-block;
 	font-weight: 700;
-	color: #1f5f96;
+	font-size: 14px;
+	color: #2b6cb0;
 	text-decoration: none;
+	transition: color 0.15s ease;
 }
 
 .vpark-forum-panel__item-title:hover {
+	color: #2c5282;
 	text-decoration: underline;
 }
 
 .vpark-forum-panel__item-subtitle {
 	font-size: 12px;
-	color: #5f6f7f;
-	margin-top: 2px;
+	color: #718096;
+	margin-top: 4px;
+	line-height: 1.35;
 }
 
 .vpark-forum-panel__metric {
-	margin-top: 6px;
+	margin-top: 8px;
 	display: inline-block;
-	padding: 2px 6px;
-	font-size: 12px;
-	color: #7a4c00;
-	background: #fff3d6;
-	border: 1px solid #f2d08c;
+	padding: 3px 8px;
+	font-size: 11px;
+	font-weight: 600;
+	color: #744210;
+	background: #fefcbf;
+	border: 1px solid #f6e05e;
 	border-radius: 999px;
 }
 
+/* ── Responsive ── */
 @media (max-width: 1220px) {
 	body#phpbb #page-header .headerbar > .inner {
 		grid-template-columns: 220px minmax(0, 1fr) 200px;
-		grid-template-areas:
-			"brand center ad";
+		grid-template-areas: "brand center ad";
 	}
 
 	.vpark-header-forum-compact {
@@ -525,16 +588,16 @@ body#phpbb #search-box.search-header {
 	}
 
 	.vpark-nav-search-form input[type="search"] {
-		width: 150px;
-		height: 24px;
-		font-size: 1.1em;
-		line-height: 24px;
+		width: 160px;
+		height: 32px;
+		font-size: 13px;
+		line-height: 32px;
 	}
 
 	.vpark-nav-search-form button,
 	.vpark-nav-search-adv {
-		width: 24px;
-		height: 24px;
+		width: 32px;
+		height: 32px;
 	}
 
 	#vpark-nav-username {
@@ -547,9 +610,9 @@ body#phpbb #search-box.search-header {
 
 	.vpark-nav-quick-login__form input,
 	.vpark-nav-quick-login__form button {
-		height: 24px;
-		line-height: 24px;
-		font-size: 1.1em;
+		height: 32px;
+		line-height: 32px;
+		font-size: 13px;
 	}
 }
 
@@ -569,24 +632,24 @@ body#phpbb #search-box.search-header {
 	}
 
 	body#phpbb #site-description {
-		grid-template-columns: 64px minmax(0, 1fr);
-		padding: 6px 8px;
+		grid-template-columns: 60px minmax(0, 1fr);
+		padding: 8px 10px;
 	}
 
 	body#phpbb #site-description .logo {
-		width: 64px;
-		min-height: 58px;
+		width: 60px;
+		min-height: 54px;
 	}
 
 	body#phpbb #site-description .site_logo {
-		width: 44px;
-		height: 44px;
-		background-size: 44px 44px;
+		width: 42px;
+		height: 42px;
+		background-size: 42px 42px;
 	}
 
 	body#phpbb #site-description h1 {
 		max-width: none;
-		font-size: 1.52em;
+		font-size: 1.4em;
 	}
 
 	.vpark-header-forum-compact {
@@ -602,12 +665,12 @@ body#phpbb #search-box.search-header {
 	}
 
 	.vpark-home-ad-slot {
-		padding: 10px 12px;
+		padding: 12px 14px;
 		border-radius: 10px;
 	}
 
 	.vpark-home-ad-slot__title {
-		font-size: 14px;
+		font-size: 15px;
 	}
 
 	.vpark-home-ad-slot__desc {
@@ -621,7 +684,7 @@ body#phpbb #search-box.search-header {
 	.vpark-breaking-news__label {
 		display: block;
 		border-right: 0;
-		border-bottom: 1px solid #bfd1e2;
+		border-bottom: 1px solid #bee3f8;
 	}
 
 	.vpark-home-news__grid {
@@ -631,6 +694,10 @@ body#phpbb #search-box.search-header {
 
 	.vpark-home-news__item a {
 		font-size: 14px;
+	}
+
+	.vpark-forum-panel__grid {
+		grid-template-columns: 1fr;
 	}
 }
 </style>

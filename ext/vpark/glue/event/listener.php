@@ -32,6 +32,9 @@ class listener implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
+	/** @var \phpbb\cache\service|null */
+	protected $cache;
+
 	public function __construct(
 		\phpbb\template\template $template,
 		\phpbb\db\driver\driver_interface $db,
@@ -39,7 +42,8 @@ class listener implements EventSubscriberInterface
 		\phpbb\user $user,
 		$request = null,
 		$phpbb_root_path = '',
-		$php_ext = ''
+		$php_ext = '',
+		$cache = null
 	)
 	{
 		$this->template = $template;
@@ -49,6 +53,7 @@ class listener implements EventSubscriberInterface
 		$this->request = ($request instanceof \phpbb\request\request_interface) ? $request : null;
 		$this->phpbb_root_path = $phpbb_root_path !== '' ? $phpbb_root_path : './';
 		$this->php_ext = $php_ext !== '' ? $php_ext : 'php';
+		$this->cache = ($cache instanceof \phpbb\cache\service) ? $cache : null;
 	}
 
 	/**
@@ -60,6 +65,8 @@ class listener implements EventSubscriberInterface
 			'core.user_setup' => 'load_language',
 			'core.page_header_after' => 'assign_portal_links',
 			'core.viewtopic_assign_template_vars_before' => 'assign_topic_summary_link',
+			'core.acp_manage_forums_request_data' => 'purge_forum_cache',
+			'core.acp_manage_forums_update_data_after' => 'purge_forum_cache',
 		);
 	}
 
@@ -71,6 +78,55 @@ class listener implements EventSubscriberInterface
 			'lang_set' => 'common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
+
+		// Handle language switching via ?language= parameter for ALL users
+		// (phpBB core only handles this for guests)
+		if ($this->request)
+		{
+			$requested_lang = $this->request->variable('language', '', true);
+			$from_cookie = false;
+			if ($requested_lang === '')
+			{
+				$requested_lang = $this->request->variable(
+					$this->config['cookie_name'] . '_lang',
+					'',
+					true,
+					\phpbb\request\request_interface::COOKIE
+				);
+				$from_cookie = true;
+			}
+
+			if ($requested_lang !== '')
+			{
+				$use_lang = basename($requested_lang);
+				$lang_file = $this->phpbb_root_path . 'language/' . $use_lang . '/common.' . $this->php_ext;
+
+				if (file_exists($lang_file))
+				{
+					// Set cookie for persistence when switching via URL param
+					if (!$from_cookie)
+					{
+						$this->user->set_cookie('lang', $use_lang, time() + 86400 * 365);
+					}
+
+					// Override user_lang_name — phpBB uses this after the event
+					$event['user_lang_name'] = $use_lang;
+
+					// Also update user data so current_lang() picks it up
+					$user_data = $event['user_data'];
+					$user_data['user_lang'] = $use_lang;
+					$event['user_data'] = $user_data;
+				}
+			}
+		}
+	}
+
+	public function purge_forum_cache()
+	{
+		if ($this->cache !== null)
+		{
+			$this->cache->destroy('_vpark_forum_panel');
+		}
 	}
 
 	public function assign_portal_links()
@@ -85,6 +141,27 @@ class listener implements EventSubscriberInterface
 		$home_ad_image = trim((string) getenv('VPARK_HOME_AD_IMAGE_URL'));
 		$home_ad_custom_title = trim((string) getenv('VPARK_HOME_AD_TITLE'));
 		$home_ad_custom_desc = trim((string) getenv('VPARK_HOME_AD_DESC'));
+
+		// Demo ads when no real ads are configured
+		if ($home_ad_custom_title === '')
+		{
+			if ($use_east_asian_title)
+			{
+				$home_ad_custom_title = '在此投放广告';
+				$home_ad_custom_desc = '维园网广告位 — 触达全球华人社区。联系 ads@victoriapark.io 了解合作方案。';
+			}
+			else
+			{
+				$home_ad_custom_title = 'Advertise Here';
+				$home_ad_custom_desc = 'Reach the VictoriaPark.io community. Contact ads@victoriapark.io for partnership opportunities.';
+			}
+		}
+
+		// Header ad demo
+		$header_ad_title = $use_east_asian_title ? '广告合作' : 'Sponsor';
+		$header_ad_desc = $use_east_asian_title
+			? '此处可放置 300x80 横幅广告。联系我们了解详情。'
+			: 'Premium 300x80 banner spot. Contact us for details.';
 
 		$this->template->assign_vars(array(
 			'S_VPARK_PORTAL_ENABLED' => $portal_enabled,
@@ -109,6 +186,8 @@ class listener implements EventSubscriberInterface
 			'VPARK_HOME_AD_IMAGE_URL' => $home_ad_image,
 			'VPARK_HOME_AD_CUSTOM_TITLE' => $home_ad_custom_title,
 			'VPARK_HOME_AD_CUSTOM_DESC' => $home_ad_custom_desc,
+			'VPARK_HEADER_AD_TITLE' => $header_ad_title,
+			'VPARK_HEADER_AD_DESC' => $header_ad_desc,
 		));
 
 		$this->assign_forum_panel_items();
@@ -217,48 +296,90 @@ class listener implements EventSubscriberInterface
 	{
 		$panel_items = $this->forum_panel_items();
 
-		$forum_names = array();
 		foreach ($panel_items as $item)
 		{
-			$forum_names[] = $item['title'];
-		}
-		$forum_links = $this->forum_links_by_name($forum_names);
-		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
+			$forum_id = isset($item['forum_id']) ? (int) $item['forum_id'] : 0;
+			$url = $forum_id > 0
+				? append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . $forum_id)
+				: append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
 
-		foreach ($panel_items as $item)
-		{
-			$title = $item['title'];
 			$this->template->assign_block_vars('vpark_forum_panel', array(
-				'TITLE'		=> $title,
+				'TITLE'		=> $item['title'],
 				'SUBTITLE'	=> $item['subtitle'],
 				'METRIC'	=> $item['metric'] ?? '',
-				'U_FORUM'	=> $forum_links[$title] ?? $index_url,
+				'U_FORUM'	=> $url,
 			));
 		}
 	}
 
+	protected function rss_lang_for_current_lang($current_lang)
+	{
+		// Map phpBB lang codes to RSS feed lang tags
+		if (strpos($current_lang, 'zh_cmn_hans') === 0) return 'zh_cmn_hans';
+		if (strpos($current_lang, 'zh_cmn_hant') === 0) return 'zh_cmn_hant';
+		if (strpos($current_lang, 'zh') === 0) return 'zh_cmn_hans';
+		if (strpos($current_lang, 'fr') === 0) return 'fr';
+		if (strpos($current_lang, 'es') === 0) return 'es';
+		return 'en'; // default to English
+	}
+
 	protected function assign_breaking_news_items()
 	{
+		// Try cached RSS feed items first
+		if ($this->cache !== null)
+		{
+			$rss_items = $this->cache->get('_vpark_rss_breaking_news');
+			if ($rss_items !== false && !empty($rss_items))
+			{
+				$current_lang = $this->current_lang();
+				$rss_lang = $this->rss_lang_for_current_lang($current_lang);
+
+				$filtered = array();
+				foreach ($rss_items as $rss_item)
+				{
+					if (isset($rss_item['lang']) && $rss_item['lang'] === $rss_lang)
+					{
+						$filtered[] = $rss_item;
+					}
+				}
+
+				// If no items match the current language, show all items
+				if (empty($filtered))
+				{
+					$filtered = $rss_items;
+				}
+
+				foreach ($filtered as $rss_item)
+				{
+					$this->template->assign_block_vars('vpark_breaking_news', array(
+						'TITLE'		=> (string) $rss_item['title'],
+						'U_TOPIC'	=> (string) $rss_item['url'],
+					));
+				}
+				return;
+			}
+		}
+
+		// Fallback to forum topics
 		$panel_items = $this->forum_panel_items();
-		$forum_names = array();
+		$forum_ids = array();
 		foreach ($panel_items as $item)
 		{
-			$forum_names[] = (string) $item['title'];
+			if (isset($item['forum_id']) && (int) $item['forum_id'] > 0)
+			{
+				$forum_ids[] = (int) $item['forum_id'];
+			}
 		}
-		$forum_links = $this->forum_links_by_name($forum_names);
-		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
 
-		if (empty($forum_names))
+		if (empty($forum_ids))
 		{
 			return;
 		}
 
 		$sql = 'SELECT t.topic_id, t.topic_title
 			FROM ' . TOPICS_TABLE . ' t
-			JOIN ' . FORUMS_TABLE . ' f
-				ON f.forum_id = t.forum_id
 			WHERE t.topic_moved_id = 0
-				AND ' . $this->db->sql_in_set('f.forum_name', $forum_names) . '
+				AND ' . $this->db->sql_in_set('t.forum_id', $forum_ids) . '
 			ORDER BY t.topic_last_post_time DESC';
 		$result = $this->db->sql_query_limit($sql, 100);
 		$news_count = 0;
@@ -281,13 +402,18 @@ class listener implements EventSubscriberInterface
 
 		if ($news_count === 0)
 		{
+			$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
 			$fallback_items = array_slice($panel_items, 0, 15);
 			foreach ($fallback_items as $item)
 			{
-				$title = (string) $item['title'];
+				$forum_id = isset($item['forum_id']) ? (int) $item['forum_id'] : 0;
+				$url = $forum_id > 0
+					? append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . $forum_id)
+					: $index_url;
+
 				$this->template->assign_block_vars('vpark_breaking_news', array(
-					'TITLE'		=> $title,
-					'U_TOPIC'	=> $forum_links[$title] ?? $index_url,
+					'TITLE'		=> (string) $item['title'],
+					'U_TOPIC'	=> $url,
 				));
 			}
 		}
@@ -336,20 +462,23 @@ class listener implements EventSubscriberInterface
 		if (empty($rows))
 		{
 			$panel_items = $this->forum_panel_items();
-			$forum_names = array();
+			$forum_ids = array();
 			foreach ($panel_items as $item)
 			{
-				$forum_names[] = (string) $item['title'];
+				if (isset($item['forum_id']) && (int) $item['forum_id'] > 0)
+				{
+					$forum_ids[] = (int) $item['forum_id'];
+				}
 			}
 
-			if (!empty($forum_names))
+			if (!empty($forum_ids))
 			{
 				$sql = 'SELECT t.topic_id, t.topic_title, t.forum_id, f.forum_name
 					FROM ' . TOPICS_TABLE . ' t
 					JOIN ' . FORUMS_TABLE . ' f
 						ON f.forum_id = t.forum_id
 					WHERE t.topic_moved_id = 0
-						AND ' . $this->db->sql_in_set('f.forum_name', $forum_names) . '
+						AND ' . $this->db->sql_in_set('t.forum_id', $forum_ids) . '
 					ORDER BY t.topic_last_post_time DESC';
 				$result = $this->db->sql_query_limit($sql, 40);
 				while ($row = $this->db->sql_fetchrow($result))
@@ -407,53 +536,49 @@ class listener implements EventSubscriberInterface
 
 	protected function forum_panel_items()
 	{
-		return array(
-			array('title' => '百家论坛', 'subtitle' => '综合时政 / 社会 / 观点', 'metric' => '人气股价 60.25金币（第10名）'),
-			array('title' => '军事纵横', 'subtitle' => '军事 / 地缘 / 战争'),
-			array('title' => '经济观察', 'subtitle' => '宏观 / 政策 / 经济评论'),
-			array('title' => '谈股论金', 'subtitle' => '股市 / 交易 / 投资心态'),
-			array('title' => '股票投资', 'subtitle' => '实操策略 / 个股复盘'),
-			array('title' => '娱乐八卦', 'subtitle' => '明星热点 / 轻内容'),
-			array('title' => '笑口常开', 'subtitle' => '段子 / 搞笑 / 轻松'),
-			array('title' => '生活百态', 'subtitle' => '生活杂谈 / 海外见闻'),
-			array('title' => '婚姻家庭', 'subtitle' => '两性 / 家庭 / 亲子'),
-			array('title' => '文化长廊', 'subtitle' => '文化 / 阅读 / 随笔'),
-			array('title' => '网际谈兵', 'subtitle' => '国际关系 / 军政延展'),
-			array('title' => '史海钩沉', 'subtitle' => '历史 / 考据 / 旧闻'),
-			array('title' => '自由文学', 'subtitle' => '原创 / 连载 / 文艺'),
-			array('title' => '体坛纵横', 'subtitle' => '体育赛事 / 热点讨论'),
-			array('title' => '电脑前线 / 数码家电', 'subtitle' => '技术工具 / 数码家电'),
-		);
-	}
-
-	protected function forum_links_by_name(array $forum_names)
-	{
-		if (empty($forum_names))
+		$cache_key = '_vpark_forum_panel';
+		if ($this->cache !== null)
 		{
-			return array();
+			$cached = $this->cache->get($cache_key);
+			if ($cached !== false)
+			{
+				return $cached;
+			}
 		}
 
-		$escaped_names = array();
-		foreach ($forum_names as $forum_name)
-		{
-			$escaped_names[] = (string) $forum_name;
-		}
-
-		$sql = 'SELECT forum_id, forum_name
+		$sql = 'SELECT forum_id, forum_name, forum_desc, forum_topics_approved, left_id
 			FROM ' . FORUMS_TABLE . '
-			WHERE forum_type = ' . FORUM_POST . '
-				AND ' . $this->db->sql_in_set('forum_name', $escaped_names);
+			WHERE display_on_index = 1
+				AND forum_status = 0
+				AND forum_type = ' . FORUM_POST . '
+			ORDER BY left_id ASC';
 		$result = $this->db->sql_query($sql);
 
-		$links = array();
+		$items = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$name = (string) $row['forum_name'];
-			$links[$name] = append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . (int) $row['forum_id']);
+			$desc = preg_replace('/\[\/?\w+(?::[a-z0-9]+)?\]/', '', (string) $row['forum_desc']);
+			$desc = trim(strip_tags($desc));
+			if (mb_strlen($desc) > 60)
+			{
+				$desc = mb_substr($desc, 0, 57) . '...';
+			}
+
+			$items[] = array(
+				'title'    => (string) $row['forum_name'],
+				'subtitle' => $desc,
+				'metric'   => '',
+				'forum_id' => (int) $row['forum_id'],
+			);
 		}
 		$this->db->sql_freeresult($result);
 
-		return $links;
+		if ($this->cache !== null)
+		{
+			$this->cache->put($cache_key, $items, 300);
+		}
+
+		return $items;
 	}
 
 	protected function first_forum_by_names(array $forum_names)

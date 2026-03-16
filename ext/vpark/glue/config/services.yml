@@ -9,6 +9,7 @@ services:
             - '@request'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '@cache'
         tags:
             - { name: event.listener }
 

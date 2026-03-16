@@ -1,15 +1,16 @@
-/* VictoriaClassic: dense, classic blue/gray forum treatment. */
+/* VictoriaClassic: modern clean forum treatment. */
 
 body.vp-classic {
 	background: var(--vp-bg);
 	color: var(--vp-text);
 	font-family: var(--vp-font-base);
 	line-height: var(--vp-line-height);
-	font-size: 13px;
+	font-size: 14px;
 }
 
 body.vp-classic a {
 	color: var(--vp-link);
+	transition: color 0.15s ease;
 }
 
 body.vp-classic a:hover,
@@ -19,23 +20,22 @@ body.vp-classic a:focus {
 
 body.vp-classic #wrap.vp-container {
 	max-width: var(--vp-container-width);
-	margin: 0 auto;
+	margin: 16px auto;
 	background: var(--vp-panel);
-	border-left: 1px solid var(--vp-border);
-	border-right: 1px solid var(--vp-border);
-	border-bottom: 1px solid var(--vp-border);
-	border-radius: 0;
+	border: none;
+	border-radius: var(--vp-radius) var(--vp-radius) 0 0;
+	box-shadow: var(--vp-shadow-md);
 }
 
 body.vp-classic .headerbar.vp-headerbar {
-	background: linear-gradient(180deg, #3f81be 0%, #1e5b94 100%);
-	border: 1px solid #2f679d;
-	border-radius: 0;
+	background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+	border: none;
+	border-radius: var(--vp-radius) var(--vp-radius) 0 0;
 }
 
 body.vp-classic .vp-site-description h1,
 body.vp-classic .vp-site-description p {
-	color: #ecf4ff;
+	color: #edf2f7;
 }
 
 body.vp-classic .site_logo {
@@ -46,40 +46,46 @@ body.vp-classic .site_logo {
 
 body.vp-classic .navbar {
 	border-radius: 0;
-	border: 1px solid var(--vp-border);
-	background: #dbe7f3;
+	border: none;
+	border-bottom: 1px solid var(--vp-border);
+	background: #ffffff;
 }
 
 body.vp-classic .forabg,
 body.vp-classic .forumbg,
 body.vp-classic .panel,
 body.vp-classic .post {
-	border-radius: 0;
+	border-radius: var(--vp-radius);
 	border: 1px solid var(--vp-border);
 	background: var(--vp-panel);
+	box-shadow: var(--vp-shadow);
+	margin-bottom: 12px;
+	overflow: hidden;
 }
 
 body.vp-classic .forabg .header,
 body.vp-classic .forumbg .header {
-	background: linear-gradient(180deg, #4d90cb 0%, #2d6ea7 100%);
-	border-bottom: 1px solid #245885;
+	background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+	border-bottom: none;
+	padding: 10px 12px;
 }
 
 body.vp-classic ul.topiclist li.header dl {
 	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.03em;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
 }
 
 body.vp-classic .topiclist dl.row-item dt,
 body.vp-classic .topiclist dl.row-item dd {
-	padding-top: 6px;
-	padding-bottom: 6px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 body.vp-classic .topiclist .row .list-inner {
-	padding-top: 2px;
-	padding-bottom: 2px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }
 
 body.vp-classic .topiclist.forums > li.row:nth-child(odd),
@@ -99,50 +105,64 @@ body.vp-classic .topiclist .row-item dd {
 }
 
 body.vp-classic .topiclist .row {
-	border-top: 1px solid #d7e3ef;
+	border-top: 1px solid #edf2f7;
 }
 
 body.vp-classic .action-bar {
-	margin: 4px 0 8px;
+	margin: 8px 0 12px;
 }
 
 body.vp-classic .pagination {
-	font-size: 11px;
+	font-size: 12px;
 	line-height: 1;
 }
 
 body.vp-classic .pagination ul {
-	gap: 2px;
+	gap: 4px;
 }
 
 body.vp-classic .pagination li a,
 body.vp-classic .pagination li span {
-	min-width: 22px;
-	height: 22px;
-	line-height: 22px;
-	padding: 0 6px;
+	min-width: 28px;
+	height: 28px;
+	line-height: 28px;
+	padding: 0 8px;
 	border: 1px solid var(--vp-border);
-	border-radius: 2px;
-	background: #f9fcff;
+	border-radius: var(--vp-radius-sm);
+	background: #fff;
+	transition: all 0.15s ease;
+}
+
+body.vp-classic .pagination li a:hover {
+	background: #edf2f7;
+	border-color: #cbd5e0;
 }
 
 body.vp-classic .pagination li.active span {
 	background: var(--vp-accent);
-	border-color: #245885;
+	border-color: var(--vp-accent);
 	color: #fff;
 }
 
 body.vp-classic .button,
 body.vp-classic .button1,
 body.vp-classic .button2 {
-	border-radius: 2px;
+	border-radius: var(--vp-radius-sm);
+	transition: all 0.15s ease;
+}
+
+body.vp-classic .button:hover,
+body.vp-classic .button1:hover,
+body.vp-classic .button2:hover {
+	box-shadow: var(--vp-shadow);
 }
 
 body.vp-classic .vp-page-layout {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) var(--vp-rail-width);
-	gap: 12px;
+	gap: 16px;
 	align-items: start;
+	padding: 16px;
 }
 
 body.vp-classic .vp-main {
@@ -150,42 +170,45 @@ body.vp-classic .vp-main {
 }
 
 body.vp-classic .vp-rail {
-	border: 1px solid var(--vp-border);
-	background: var(--vp-panel);
-	padding: 8px;
+	border: none;
+	background: transparent;
+	padding: 0;
 }
 
 body.vp-classic .vp-rail-block {
 	border: 1px solid var(--vp-border);
 	background: #fff;
-	margin-bottom: 8px;
+	margin-bottom: 12px;
+	border-radius: var(--vp-radius);
+	box-shadow: var(--vp-shadow);
+	overflow: hidden;
 }
 
 body.vp-classic .vp-rail-block h4 {
 	margin: 0;
-	padding: 7px 9px;
-	font-size: 12px;
-	font-weight: 700;
-	background: #dde9f5;
+	padding: 10px 14px;
+	font-size: 13px;
+	font-weight: 600;
+	background: #f7fafc;
 	border-bottom: 1px solid var(--vp-border);
 }
 
 body.vp-classic .vp-rail-block p {
 	margin: 0;
-	padding: 8px 9px;
+	padding: 10px 14px;
 	color: var(--vp-muted);
 }
 
 body.vp-classic .vp-rail-links {
 	list-style: none;
 	margin: 0;
-	padding: 6px 9px 8px;
+	padding: 8px 14px 10px;
 }
 
 body.vp-classic .vp-rail-links li {
-	padding: 3px 0;
-	font-size: 12px;
-	border-bottom: 1px dotted #d5e1ed;
+	padding: 5px 0;
+	font-size: 13px;
+	border-bottom: 1px solid #edf2f7;
 }
 
 body.vp-classic .vp-rail-links li:last-child {
@@ -200,12 +223,21 @@ body.vp-classic .vp-rail-ad p {
 
 body.vp-classic .vp-footer {
 	border-top: 1px solid var(--vp-border);
-	background: #e6eef7;
+	background: #f7fafc;
 }
 
 body.vp-classic .vp-footer-note {
 	color: var(--vp-muted);
-	font-size: 11px;
+	font-size: 12px;
+}
+
+/* Stat blocks */
+body.vp-classic .stat-block {
+	border-radius: var(--vp-radius);
+	border: 1px solid var(--vp-border);
+	box-shadow: var(--vp-shadow);
+	margin-bottom: 12px;
+	overflow: hidden;
 }
 
 @media (max-width: 1100px) {
@@ -220,13 +252,22 @@ body.vp-classic .vp-footer-note {
 
 @media (max-width: 700px) {
 	body.vp-classic #wrap.vp-container {
-		border-left: 0;
-		border-right: 0;
+		margin: 0;
+		border-radius: 0;
+	}
+
+	body.vp-classic .headerbar.vp-headerbar {
+		border-radius: 0;
+	}
+
+	body.vp-classic .vp-page-layout {
+		padding: 10px;
+		gap: 10px;
 	}
 
 	body.vp-classic .topiclist dl.row-item dt,
 	body.vp-classic .topiclist dl.row-item dd {
-		padding-top: 4px;
-		padding-bottom: 4px;
+		padding-top: 8px;
+		padding-bottom: 8px;
 	}
 }
