@@ -315,24 +315,38 @@ body#phpbb #search-box.search-header {
 /* ── Home ad slot ── */
 .vpark-home-ad-slot {
 	margin: 0 0 16px 0;
-	padding: 16px 20px;
-	border: 2px dashed #cbd5e0;
+	padding: 18px 24px;
+	border: 1px solid #e2e8f0;
 	border-radius: 12px;
-	background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+	background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 50%, #fefcbf 100%);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+	position: relative;
+	overflow: hidden;
+}
+
+.vpark-home-ad-slot::before {
+	content: 'AD';
+	position: absolute;
+	top: 8px;
+	right: 12px;
+	font-size: 10px;
+	font-weight: 700;
+	color: #a0aec0;
+	letter-spacing: 1px;
 }
 
 .vpark-home-ad-slot__title {
-	font-size: 16px;
+	font-size: 17px;
 	font-weight: 700;
 	line-height: 1.2;
-	color: #2d3748;
+	color: #2b6cb0;
 }
 
 .vpark-home-ad-slot__desc {
 	margin-top: 6px;
 	font-size: 13px;
-	line-height: 1.35;
-	color: #718096;
+	line-height: 1.45;
+	color: #4a5568;
 }
 
 .vpark-home-ad-slot__media-link {

@@ -8,26 +8,38 @@
     </linearGradient>
     <linearGradient id="vGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#bee3f8"/>
+      <stop offset="100%" stop-color="#90cdf4"/>
+    </linearGradient>
+    <linearGradient id="parkGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </linearGradient>
     <filter id="glow">
-      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#1a365d" flood-opacity="0.3"/>
+    </filter>
   </defs>
   <!-- Icon: rounded square background -->
-  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bg)"/>
-  <!-- Inner border -->
-  <rect x="3.5" y="3.5" width="57" height="57" rx="12.5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bg)"/>
+  <!-- Subtle inner highlight -->
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.8"/>
+  <!-- Park trees silhouette -->
+  <path d="M10 56 L16 42 L22 56 M20 56 L26 40 L32 56 M30 56 L36 44 L42 56 M40 56 L46 38 L52 56" fill="none" stroke="url(#parkGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
   <!-- V lettermark -->
-  <path d="M17 14h7.5l7.5 24 7.5-24H47L32 52z" fill="url(#vGrad)" filter="url(#glow)"/>
-  <!-- Accent bar under V -->
-  <rect x="22" y="54" width="20" height="2" rx="1" fill="#4299e1" opacity="0.8"/>
+  <path d="M18 14h6.5l7.5 23 7.5-23H46L32 50z" fill="url(#vGrad)" filter="url(#glow)"/>
+  <!-- Accent bar -->
+  <rect x="24" y="53" width="16" height="2.5" rx="1.25" fill="#63b3ed" opacity="0.9"/>
   <!-- Text: 维园网 -->
-  <text x="72" y="30" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="22" font-weight="700" fill="#1a365d" letter-spacing="2">维园网</text>
+  <text x="72" y="28" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700" fill="#1a365d" letter-spacing="1.5" filter="url(#shadow)">维园网</text>
   <!-- Text: VictoriaPark -->
-  <text x="72" y="50" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="500" fill="#4a5568" letter-spacing="1.5">VictoriaPark</text>
+  <text x="72" y="48" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2b6cb0" letter-spacing="1">VictoriaPark</text>
+  <!-- Subtle tagline dot -->
+  <circle cx="160" cy="46" r="2" fill="#63b3ed" opacity="0.6"/>
+  <text x="165" y="49" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="9" font-weight="400" fill="#718096" letter-spacing="0.5">io</text>
 </svg>

@@ -39,18 +39,24 @@ if (empty($lang) || !is_array($lang))
 
 // Privacy policy and T&C
 $lang = array_merge($lang, array(
-	‘TERMS_OF_USE_CONTENT’	=> ‘By accessing “%1$s” (hereinafter “we”, “us”, “our”, “%1$s”, “%2$s”), you agree to be legally bound by the following terms. If you do not agree to be legally bound by all of the following terms then please do not access and/or use “%1$s”. We may change these at any time and we will do our utmost in informing you, though it would be prudent to review this regularly yourself as your continued usage of “%1$s” after changes mean you agree to be legally bound by these terms as they are updated and/or amended.
+	‘TERMS_OF_USE_CONTENT’	=> ‘By accessing “%1$s” (hereinafter “we”, “us”, “our”, “%1$s”, “%2$s”), you agree to be legally bound by the following terms. If you do not agree, do not access or use “%1$s”. We may update these terms at any time, and your continued use of “%1$s” after updates means you accept the updated terms.
 	<br><br>
-	You agree not to post any abusive, obscene, vulgar, slanderous, hateful, threatening, sexually-orientated or any other material that may violate any laws be it of your country, the country where “%1$s” is hosted or International Law. Doing so may lead to you being immediately and permanently banned, with notification of your Internet Service Provider if deemed required by us. The IP address of all posts are recorded to aid in enforcing these conditions. You agree that “%1$s” have the right to remove, edit, move or close any topic at any time should we see fit. As a user you agree to any information you have entered to being stored in a database. While this information will not be disclosed to any third party without your consent, neither “%1$s” nor its administrators shall be held responsible for any hacking attempt that may lead to the data being compromised.
+	You agree not to post abusive, obscene, defamatory, hateful, threatening, harassing, sexually explicit, illegal, or otherwise unlawful content. We may moderate content and accounts at our discretion, including editing, moving, locking, hiding, or removing content and restricting access when needed to protect the community.
+	<br><br>
+	For security, anti abuse, and enforcement purposes, we may log technical metadata related to your activity, including IP address and timestamps. We may disclose information when required by applicable law or when necessary to protect the legitimate rights and safety of the community.
+	<br><br>
+	You retain ownership of content you submit. By posting on “%1$s”, you grant us a non exclusive right to display, store, and manage that content within the forum service. If you believe content violates your rights, contact us through the provided support channel.
 	‘,
 
-	‘PRIVACY_POLICY’		=> ‘This policy explains in detail how “%1$s” along with its affiliated companies (hereinafter “we”, “us”, “our”, “%1$s”, “%2$s”) use any information collected during any session of usage by you (hereinafter “your information”).
+	‘PRIVACY_POLICY’		=> ‘This policy explains how “%1$s” collects, uses, and protects your information.
 	<br><br>
-	Your information is collected via two ways. Firstly, by browsing “%1$s” will cause the software to create a number of cookies, which are small text files that are downloaded on to your computer\’s web browser temporary files, used to store session information and improve your user experience.
+	We collect information necessary to operate the forum, including account data (such as username, password hash, and email), content you submit, moderation and security logs, and technical metadata (such as IP address, device, and browser information).
 	<br><br>
-	Your account will at a bare minimum contain a uniquely identifiable name (hereinafter “your user name”), a personal password used for logging into your account (hereinafter “your password”) and a personal, valid email address (hereinafter “your email”). Your information for your account at “%1$s” is protected by data-protection laws applicable in the country that hosts us.
+	We use cookies and session data to maintain sign in state, remember preferences, track read status, and improve site experience. You can manage cookies in your browser settings, but disabling cookies may affect some features.
 	<br><br>
-	Your password is ciphered (a one-way hash) so that it is secure. However, it is recommended that you do not reuse the same password across a number of different websites. Your password is the means of accessing your account at “%1$s”, so please guard it carefully and under no circumstance will anyone affiliated with “%1$s” or another 3rd party legitimately ask you for your password.
+	We use your information for account management, forum operations, moderation, abuse prevention, and service analytics. We do not sell personal data to unrelated third parties. We may disclose data when required by law, for lawful requests, or to protect the rights, property, and safety of the community.
+	<br><br>
+	You can update parts of your profile in the User Control Panel. For account deletion or privacy related requests, contact the administrators through the contact channel. We retain necessary data as required by applicable law and operational needs.
 	‘,
 ));
 
