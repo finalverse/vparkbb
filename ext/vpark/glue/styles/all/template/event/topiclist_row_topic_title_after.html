@@ -1,0 +1,8 @@
+{% if topicrow.VPARK_TOPIC_EXCERPT %}
+<div class="vpark-topic-card__excerpt">{{ topicrow.VPARK_TOPIC_EXCERPT }}</div>
+{% endif %}
+<div class="vpark-topic-card__meta">
+	{% if topicrow.VPARK_TOPIC_FORUM %}<span>{{ topicrow.VPARK_TOPIC_FORUM }}</span>{% endif %}
+	{% if topicrow.VPARK_TOPIC_AUTHOR %}<span>{{ topicrow.VPARK_TOPIC_AUTHOR }}</span>{% endif %}
+	{% if topicrow.VPARK_TOPIC_COMMENTS is defined %}<span>{{ topicrow.VPARK_TOPIC_COMMENTS }} comments</span>{% endif %}
+</div>

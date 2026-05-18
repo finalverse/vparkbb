@@ -35,6 +35,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\cache\service|null */
 	protected $cache;
 
+	/** @var array<int, array<string, mixed>> */
+	protected $topic_cards = array();
+
 	public function __construct(
 		\phpbb\template\template $template,
 		\phpbb\db\driver\driver_interface $db,
@@ -67,6 +70,9 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_assign_template_vars_before' => 'assign_topic_summary_link',
 			'core.acp_manage_forums_request_data' => 'purge_forum_cache',
 			'core.acp_manage_forums_update_data_after' => 'purge_forum_cache',
+			'core.display_forums_modify_template_vars' => 'assign_forum_card_vars',
+			'core.viewforum_modify_topics_data' => 'prepare_viewforum_topic_cards',
+			'core.viewforum_modify_topicrow' => 'assign_topic_card_vars',
 		);
 	}
 
@@ -192,7 +198,7 @@ class listener implements EventSubscriberInterface
 
 		$this->assign_forum_panel_items();
 		$this->assign_breaking_news_items();
-		$this->assign_home_news_items();
+		$this->assign_home_portal_items();
 	}
 
 	public function assign_topic_summary_link($event)
@@ -205,6 +211,71 @@ class listener implements EventSubscriberInterface
 			'S_VPARK_SUMMARY_ENABLED' => $summary_enabled && $portal_url !== '' && $topic_id > 0,
 			'U_VPARK_TOPIC_SUMMARY' => ($summary_enabled && $portal_url !== '' && $topic_id > 0) ? ($portal_url . '/topic/' . $topic_id) : '',
 		));
+	}
+
+	public function assign_forum_card_vars($event)
+	{
+		$forum_row = $event['forum_row'];
+		$row = $event['row'];
+		$forum_id = isset($row['forum_id']) ? (int) $row['forum_id'] : 0;
+		$forum_name = isset($row['forum_name']) ? (string) $row['forum_name'] : '';
+		$forum_desc = isset($row['forum_desc']) ? (string) $row['forum_desc'] : '';
+
+		$forum_row['VPARK_FORUM_IMAGE'] = !empty($row['forum_image'])
+			? $this->phpbb_root_path . ltrim((string) $row['forum_image'], '/')
+			: $this->fallback_image_for_forum($forum_id, $forum_name);
+		$forum_row['VPARK_FORUM_KICKER'] = $this->forum_kicker($forum_name);
+		$forum_row['VPARK_FORUM_EXCERPT'] = $this->clean_excerpt($forum_desc, 110);
+
+		$event['forum_row'] = $forum_row;
+	}
+
+	public function prepare_viewforum_topic_cards($event)
+	{
+		$rowset = $event['rowset'];
+		if (empty($rowset) || !is_array($rowset))
+		{
+			return;
+		}
+
+		$topic_ids = array();
+		foreach ($rowset as $row)
+		{
+			if (!empty($row['topic_id']))
+			{
+				$topic_ids[] = (int) $row['topic_id'];
+			}
+		}
+
+		$this->topic_cards = $this->topic_cards + $this->topic_cards_for_topic_ids($topic_ids);
+	}
+
+	public function assign_topic_card_vars($event)
+	{
+		$row = $event['row'];
+		$topic_row = $event['topic_row'];
+		$topic_id = isset($row['topic_id']) ? (int) $row['topic_id'] : 0;
+
+		if ($topic_id > 0 && !isset($this->topic_cards[$topic_id]))
+		{
+			$this->topic_cards = $this->topic_cards + $this->topic_cards_for_topic_ids(array($topic_id));
+		}
+
+		$card = isset($this->topic_cards[$topic_id]) ? $this->topic_cards[$topic_id] : array();
+		$forum_id = isset($row['forum_id']) ? (int) $row['forum_id'] : (isset($card['forum_id']) ? (int) $card['forum_id'] : 0);
+		$forum_name = isset($row['forum_name']) ? (string) $row['forum_name'] : (isset($card['forum_name']) ? (string) $card['forum_name'] : '');
+		$reply_count = max(0, ((int) ($row['topic_posts_approved'] ?? 1)) - 1);
+
+		$topic_row['VPARK_TOPIC_IMAGE'] = isset($card['image']) && $card['image'] !== ''
+			? $card['image']
+			: $this->fallback_image_for_forum($forum_id, $forum_name, $topic_id);
+		$topic_row['VPARK_TOPIC_EXCERPT'] = isset($card['excerpt']) ? (string) $card['excerpt'] : '';
+		$topic_row['VPARK_TOPIC_FORUM'] = $forum_name;
+		$topic_row['VPARK_TOPIC_KICKER'] = $this->forum_kicker($forum_name);
+		$topic_row['VPARK_TOPIC_AUTHOR'] = isset($row['topic_first_poster_name']) ? (string) $row['topic_first_poster_name'] : '';
+		$topic_row['VPARK_TOPIC_COMMENTS'] = (string) $reply_count;
+
+		$event['topic_row'] = $topic_row;
 	}
 
 	protected function portal_url()
@@ -419,6 +490,104 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	protected function assign_home_portal_items()
+	{
+		if (!$this->is_index_page())
+		{
+			return;
+		}
+
+		$index_url = append_sid("{$this->phpbb_root_path}index.{$this->php_ext}");
+		$panel_items = $this->forum_panel_items();
+		$forum_ids = array();
+		foreach ($panel_items as $item)
+		{
+			if (isset($item['forum_id']) && (int) $item['forum_id'] > 0)
+			{
+				$forum_ids[] = (int) $item['forum_id'];
+			}
+		}
+
+		$news_forum_url = $index_url;
+		$news_forum = $this->first_forum_by_names(array(
+			'æ–°é—»',
+			'VictoriaParkæ–°é—»',
+			'VictoriaPark.ioæ–°é—»',
+			'æ–°é—»é€Ÿé€’',
+			'新闻',
+			'VictoriaPark新闻',
+			'VictoriaPark.io新闻',
+			'新闻速递',
+		));
+
+		if ($news_forum)
+		{
+			if (empty($forum_ids))
+			{
+				$forum_ids = array((int) $news_forum['forum_id']);
+			}
+			$news_forum_url = append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . (int) $news_forum['forum_id']);
+		}
+
+		$cards = $this->editorial_topic_cards($forum_ids, 16);
+		if ($news_forum_url === $index_url && !empty($cards[0]['forum_id']))
+		{
+			$news_forum_url = append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . (int) $cards[0]['forum_id']);
+		}
+
+		$hero_card = !empty($cards) ? $cards[0] : array();
+		$story_cards = array_slice($cards, 1, 6);
+		$hot_cards = array_slice($cards, 7, 8);
+
+		$this->template->assign_vars(array(
+			'U_VPARK_NEWS_FORUM' => $news_forum_url,
+			'S_VPARK_HOME_NEWS' => !empty($cards),
+			'S_VPARK_HOME_STORIES' => !empty($story_cards),
+			'S_VPARK_HOME_HOT' => !empty($hot_cards),
+		));
+
+		if (!empty($hero_card))
+		{
+			$this->template->assign_vars(array(
+				'VPARK_HOME_HERO_TITLE' => $hero_card['title'],
+				'VPARK_HOME_HERO_EXCERPT' => $hero_card['excerpt'],
+				'VPARK_HOME_HERO_IMAGE' => $hero_card['image'],
+				'VPARK_HOME_HERO_FORUM' => $hero_card['forum_name'],
+				'VPARK_HOME_HERO_AUTHOR' => $hero_card['author'],
+				'VPARK_HOME_HERO_TIME' => $hero_card['time'],
+				'VPARK_HOME_HERO_COMMENTS' => (string) $hero_card['comments'],
+				'U_VPARK_HOME_HERO' => $hero_card['url'],
+			));
+		}
+
+		foreach ($story_cards as $card)
+		{
+			$this->template->assign_block_vars('vpark_home_stories', array(
+				'TITLE' => $card['title'],
+				'EXCERPT' => $card['excerpt'],
+				'IMAGE' => $card['image'],
+				'FORUM_NAME' => $card['forum_name'],
+				'AUTHOR' => $card['author'],
+				'TIME' => $card['time'],
+				'COMMENTS' => (string) $card['comments'],
+				'U_TOPIC' => $card['url'],
+			));
+		}
+
+		foreach ($hot_cards as $card)
+		{
+			$this->template->assign_block_vars('vpark_hot_discussions', array(
+				'TITLE' => $card['title'],
+				'EXCERPT' => $card['excerpt'],
+				'FORUM_NAME' => $card['forum_name'],
+				'AUTHOR' => $card['author'],
+				'TIME' => $card['time'],
+				'COMMENTS' => (string) $card['comments'],
+				'U_TOPIC' => $card['url'],
+			));
+		}
+	}
+
 	protected function assign_home_news_items()
 	{
 		if (!$this->is_index_page())
@@ -532,6 +701,413 @@ class listener implements EventSubscriberInterface
 			));
 			$counter++;
 		}
+	}
+
+	protected function latest_topic_cards(array $forum_ids, $limit = 12)
+	{
+		if (empty($forum_ids))
+		{
+			return array();
+		}
+
+		$sql = 'SELECT t.topic_id
+			FROM ' . TOPICS_TABLE . ' t
+			WHERE t.topic_moved_id = 0
+				AND t.topic_visibility = ' . ITEM_APPROVED . '
+				AND ' . $this->db->sql_in_set('t.forum_id', array_map('intval', $forum_ids)) . '
+			ORDER BY t.topic_last_post_time DESC';
+		$result = $this->db->sql_query_limit($sql, (int) $limit);
+
+		$topic_ids = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topic_ids[] = (int) $row['topic_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		$cards_by_topic = $this->topic_cards_for_topic_ids($topic_ids);
+		$cards = array();
+		foreach ($topic_ids as $topic_id)
+		{
+			if (isset($cards_by_topic[$topic_id]))
+			{
+				$cards[] = $cards_by_topic[$topic_id];
+			}
+		}
+
+		return $cards;
+	}
+
+	protected function editorial_topic_cards(array $forum_ids, $limit = 12)
+	{
+		if (empty($forum_ids))
+		{
+			return array();
+		}
+
+		$sql = 'SELECT t.topic_id, t.forum_id
+			FROM ' . TOPICS_TABLE . ' t
+			WHERE t.topic_moved_id = 0
+				AND t.topic_visibility = ' . ITEM_APPROVED . '
+				AND ' . $this->db->sql_in_set('t.forum_id', array_map('intval', $forum_ids)) . '
+			ORDER BY t.topic_last_post_time DESC';
+		$result = $this->db->sql_query_limit($sql, max((int) $limit * 5, 40));
+
+		$primary_by_forum = array();
+		$overflow = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topic_id = (int) $row['topic_id'];
+			$forum_id = (int) $row['forum_id'];
+			if (!isset($primary_by_forum[$forum_id]))
+			{
+				$primary_by_forum[$forum_id] = $topic_id;
+			}
+			else
+			{
+				$overflow[] = $topic_id;
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		$topic_ids = array_values($primary_by_forum);
+		foreach ($overflow as $topic_id)
+		{
+			if (count($topic_ids) >= $limit)
+			{
+				break;
+			}
+			$topic_ids[] = $topic_id;
+		}
+		$topic_ids = array_slice(array_values(array_unique($topic_ids)), 0, (int) $limit);
+
+		$cards_by_topic = $this->topic_cards_for_topic_ids($topic_ids);
+		$cards = array();
+		foreach ($topic_ids as $topic_id)
+		{
+			if (isset($cards_by_topic[$topic_id]))
+			{
+				$cards[] = $cards_by_topic[$topic_id];
+			}
+		}
+
+		return $cards;
+	}
+
+	protected function topic_cards_for_topic_ids(array $topic_ids)
+	{
+		$topic_ids = array_values(array_unique(array_filter(array_map('intval', $topic_ids))));
+		if (empty($topic_ids))
+		{
+			return array();
+		}
+
+		$attachment_images = $this->topic_attachment_images($topic_ids);
+
+		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_first_poster_name,
+				t.topic_time, t.topic_last_post_time, t.topic_posts_approved, t.topic_views,
+				f.forum_name, p.post_text, p.bbcode_uid
+			FROM ' . TOPICS_TABLE . ' t
+			JOIN ' . FORUMS_TABLE . ' f
+				ON f.forum_id = t.forum_id
+			LEFT JOIN ' . POSTS_TABLE . ' p
+				ON p.post_id = t.topic_first_post_id
+			WHERE ' . $this->db->sql_in_set('t.topic_id', $topic_ids);
+		$result = $this->db->sql_query($sql);
+
+		$cards = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topic_id = (int) $row['topic_id'];
+			$forum_id = (int) $row['forum_id'];
+			$forum_name = (string) $row['forum_name'];
+			$title = trim(censor_text((string) $row['topic_title']));
+			if ($title === '')
+			{
+				continue;
+			}
+
+			$post_text = isset($row['post_text']) ? (string) $row['post_text'] : '';
+			$image = isset($attachment_images[$topic_id]) ? $attachment_images[$topic_id] : $this->first_post_image_url($post_text);
+			if ($image === '')
+			{
+				$image = $this->fallback_image_for_forum($forum_id, $forum_name, $topic_id);
+			}
+
+			$cards[$topic_id] = array(
+				'topic_id' => $topic_id,
+				'forum_id' => $forum_id,
+				'forum_name' => $forum_name,
+				'title' => $title,
+				'excerpt' => $this->clean_excerpt($post_text, 170, isset($row['bbcode_uid']) ? (string) $row['bbcode_uid'] : ''),
+				'image' => $image,
+				'author' => (string) $row['topic_first_poster_name'],
+				'time' => $this->user->format_date((int) $row['topic_time']),
+				'comments' => max(0, ((int) $row['topic_posts_approved']) - 1),
+				'views' => (int) $row['topic_views'],
+				'url' => append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", 't=' . $topic_id),
+			);
+		}
+		$this->db->sql_freeresult($result);
+
+		return $cards;
+	}
+
+	protected function topic_attachment_images(array $topic_ids)
+	{
+		$topic_ids = array_values(array_unique(array_filter(array_map('intval', $topic_ids))));
+		if (empty($topic_ids))
+		{
+			return array();
+		}
+
+		$sql = 'SELECT attach_id, topic_id, thumbnail, mimetype, extension
+			FROM ' . ATTACHMENTS_TABLE . '
+			WHERE is_orphan = 0
+				AND in_message = 0
+				AND ' . $this->db->sql_in_set('topic_id', $topic_ids) . "
+				AND (LOWER(mimetype) LIKE 'image/%'
+					OR LOWER(extension) IN ('jpg', 'jpeg', 'png', 'gif', 'webp'))
+			ORDER BY filetime ASC, attach_id ASC";
+		$result = $this->db->sql_query($sql);
+
+		$images = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topic_id = (int) $row['topic_id'];
+			if (isset($images[$topic_id]))
+			{
+				continue;
+			}
+
+			$params = 'id=' . (int) $row['attach_id'];
+			if (!empty($row['thumbnail']))
+			{
+				$params .= '&amp;t=1';
+			}
+			$images[$topic_id] = append_sid("{$this->phpbb_root_path}download/file.{$this->php_ext}", $params);
+		}
+		$this->db->sql_freeresult($result);
+
+		return $images;
+	}
+
+	protected function first_post_image_url($post_text)
+	{
+		$post_text = (string) $post_text;
+		if ($post_text === '')
+		{
+			return '';
+		}
+
+		$patterns = array(
+			'#\[img(?:=[^\]]*)?\](https?://[^\[]+)\[/img\]#iu',
+			'#<img[^>]+src=["\']([^"\']+)["\']#iu',
+			'#<IMG[^>]+src=["\']([^"\']+)["\']#u',
+			'#<URL\s+url=["\']([^"\']+)["\']#u',
+			'#(https?://[^\s<>"\']+\.(?:jpe?g|png|gif|webp)(?:\?[^\s<>"\']*)?)#iu',
+		);
+
+		foreach ($patterns as $pattern)
+		{
+			if (preg_match_all($pattern, $post_text, $matches))
+			{
+				foreach ($matches[1] as $candidate)
+				{
+					$url = html_entity_decode(trim((string) $candidate), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					if ($this->is_likely_image_url($url))
+					{
+						return $url;
+					}
+				}
+			}
+		}
+
+		return '';
+	}
+
+	protected function is_likely_image_url($url)
+	{
+		$url = trim((string) $url);
+		if ($url === '' || !preg_match('#^https?://#i', $url))
+		{
+			return false;
+		}
+
+		$path = parse_url($url, PHP_URL_PATH);
+		return is_string($path) && preg_match('#\.(jpe?g|png|gif|webp)$#i', $path);
+	}
+
+	protected function clean_excerpt($text, $limit = 140, $bbcode_uid = '')
+	{
+		$text = (string) $text;
+		if ($text === '')
+		{
+			return '';
+		}
+
+		if (function_exists('strip_bbcode'))
+		{
+			strip_bbcode($text, $bbcode_uid);
+		}
+
+		$text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		$text = preg_replace('#<br\s*/?>#i', ' ', $text);
+		$text = preg_replace('#<[^>]+>#', ' ', $text);
+		$text = preg_replace('#https?://\S+#iu', ' ', $text);
+		$text = preg_replace('/\s+/u', ' ', $text);
+		$text = trim($text);
+
+		if ($text === '')
+		{
+			return '';
+		}
+
+		if (mb_strlen($text) > $limit)
+		{
+			$text = rtrim(mb_substr($text, 0, max(0, $limit - 3))) . '...';
+		}
+
+		return $text;
+	}
+
+	protected function fallback_image_for_forum($forum_id, $forum_name, $topic_id = 0)
+	{
+		$slug = $this->forum_image_slug((int) $forum_id, (string) $forum_name);
+		$seed = (int) $topic_id > 0 ? ((int) floor((int) $topic_id / 8) + (int) $forum_id) : (int) $forum_id;
+		$variants = array(
+			'forum-finance' => array('forum-finance', 'forum-finance-brief', 'forum-finance-ledger'),
+			'forum-community' => array('forum-community', 'forum-community-talk'),
+			'forum-entertainment' => array('forum-entertainment', 'forum-entertainment-stage'),
+			'forum-generic' => array('forum-generic', 'forum-community-talk'),
+		);
+		if ($seed > 0 && isset($variants[$slug]))
+		{
+			$pool = $variants[$slug];
+			$slug = $pool[$seed % count($pool)];
+		}
+
+		return $this->phpbb_root_path . 'ext/vpark/glue/styles/all/theme/images/editorial/' . $slug . '.svg';
+	}
+
+	protected function forum_image_slug($forum_id, $forum_name)
+	{
+		$name = mb_strtolower((string) $forum_name);
+
+		if (strpos($name, '军') !== false || strpos($name, '谈兵') !== false || strpos($name, '談兵') !== false || strpos($name, '国际') !== false || strpos($name, '世界') !== false)
+		{
+			return 'forum-world';
+		}
+		if (strpos($name, '股') !== false || strpos($name, '经济') !== false || strpos($name, '經濟') !== false || strpos($name, '金融') !== false || strpos($name, '投资') !== false)
+		{
+			return 'forum-finance';
+		}
+		if (strpos($name, '电脑') !== false || strpos($name, '電腦') !== false || strpos($name, '数码') !== false || strpos($name, '科技') !== false || strpos($name, '网络') !== false || stripos($name, 'tech') !== false)
+		{
+			return 'forum-tech';
+		}
+		if (strpos($name, '历史') !== false || strpos($name, '歷史') !== false)
+		{
+			return 'forum-history';
+		}
+		if (strpos($name, '体坛') !== false || strpos($name, '體壇') !== false || strpos($name, '体育') !== false || stripos($name, 'sport') !== false)
+		{
+			return 'forum-sports';
+		}
+		if (strpos($name, '娱乐') !== false || strpos($name, '娛樂') !== false || strpos($name, '笑') !== false)
+		{
+			return 'forum-entertainment';
+		}
+		if (strpos($name, '生活') !== false || strpos($name, '婚姻') !== false || strpos($name, '家庭') !== false)
+		{
+			return 'forum-lifestyle';
+		}
+		if (strpos($name, '文化') !== false || strpos($name, '文学') !== false || strpos($name, '文學') !== false || strpos($name, '长廊') !== false || strpos($name, '長廊') !== false)
+		{
+			return 'forum-culture';
+		}
+		if (strpos($name, '百家') !== false || strpos($name, '社区') !== false || strpos($name, '社區') !== false || strpos($name, '论坛') !== false || strpos($name, '論壇') !== false || strpos($name, '新闻') !== false || strpos($name, '新聞') !== false)
+		{
+			return 'forum-community';
+		}
+
+		if (strpos($name, '股') !== false || strpos($name, '经济') !== false || stripos($name, 'finance') !== false)
+		{
+			return 'forum-finance';
+		}
+		if (strpos($name, '电脑') !== false || strpos($name, '数码') !== false || strpos($name, '网') !== false || stripos($name, 'tech') !== false)
+		{
+			return 'forum-tech';
+		}
+		if (strpos($name, '军') !== false || strpos($name, '谈兵') !== false || stripos($name, 'world') !== false)
+		{
+			return 'forum-world';
+		}
+		if (strpos($name, '史') !== false || strpos($name, '历史') !== false)
+		{
+			return 'forum-history';
+		}
+		if (strpos($name, '体坛') !== false || strpos($name, '体育') !== false || stripos($name, 'sport') !== false)
+		{
+			return 'forum-sports';
+		}
+		if (strpos($name, '娱乐') !== false || strpos($name, '笑') !== false)
+		{
+			return 'forum-entertainment';
+		}
+		if (strpos($name, '生活') !== false || strpos($name, '婚姻') !== false || strpos($name, '家庭') !== false)
+		{
+			return 'forum-lifestyle';
+		}
+		if (strpos($name, '文化') !== false || strpos($name, '文学') !== false || strpos($name, '长廊') !== false)
+		{
+			return 'forum-culture';
+		}
+		if (strpos($name, '百家') !== false || strpos($name, '社区') !== false)
+		{
+			return 'forum-community';
+		}
+
+		return 'forum-generic';
+	}
+
+	protected function forum_kicker($forum_name)
+	{
+		$name = (string) $forum_name;
+		if (strpos($name, '股') !== false || strpos($name, '经济') !== false)
+		{
+			return 'Markets';
+		}
+		if (strpos($name, '电脑') !== false || strpos($name, '数码') !== false || strpos($name, '网') !== false)
+		{
+			return 'Technology';
+		}
+		if (strpos($name, '军') !== false || strpos($name, '谈兵') !== false)
+		{
+			return 'World';
+		}
+		if (strpos($name, '史') !== false || strpos($name, '历史') !== false)
+		{
+			return 'History';
+		}
+		if (strpos($name, '体坛') !== false || strpos($name, '体育') !== false)
+		{
+			return 'Sports';
+		}
+		if (strpos($name, '娱乐') !== false || strpos($name, '笑') !== false)
+		{
+			return 'Culture';
+		}
+		if (strpos($name, '生活') !== false || strpos($name, '婚姻') !== false || strpos($name, '家庭') !== false)
+		{
+			return 'Life';
+		}
+		if (strpos($name, '文化') !== false || strpos($name, '文学') !== false || strpos($name, '长廊') !== false)
+		{
+			return 'Ideas';
+		}
+
+		return 'Community';
 	}
 
 	protected function forum_panel_items()

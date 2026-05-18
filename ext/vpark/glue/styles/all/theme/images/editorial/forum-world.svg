@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="World affairs editorial image">
+  <rect width="1200" height="675" fill="#eef2f5"/>
+  <circle cx="426" cy="338" r="230" fill="#d2e1df"/>
+  <path d="M266 292c82-80 208-108 314-66 40 16 82 44 110 76-92 20-122 74-188 88-68 14-122-24-166-20-44 6-68 38-98 68-32-46-42-102-28-146z" fill="#0d6b75"/>
+  <path d="M530 156c66 28 118 84 142 152-48-14-84-34-100-66-16-34-44-58-88-72 14-8 30-12 46-14z" fill="#b04d2f"/>
+  <path d="M336 504c62-36 100-60 170-50 62 8 102-22 148-54-24 76-94 136-180 158-50 12-98 8-138-54z" fill="#f0b35b"/>
+  <rect x="720" y="130" width="312" height="390" rx="26" fill="#fff"/>
+  <path d="M762 196h180M762 252h226M762 308h170M762 364h210M762 420h136" stroke="#637285" stroke-width="18" stroke-linecap="round"/>
+  <path d="M1032 130l64 58v354l-64-22z" fill="#17324a"/>
+  <path d="M826 548h190" stroke="#17324a" stroke-width="20" stroke-linecap="round"/>
+</svg>

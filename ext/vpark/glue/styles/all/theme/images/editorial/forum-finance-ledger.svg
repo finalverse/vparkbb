@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Finance ledger editorial image">
+  <rect width="1200" height="675" fill="#f3f7fb"/>
+  <rect x="118" y="104" width="964" height="468" rx="36" fill="#ffffff" stroke="#d9e4f1" stroke-width="12"/>
+  <rect x="176" y="162" width="352" height="56" rx="18" fill="#dbeafe"/>
+  <rect x="176" y="280" width="116" height="188" rx="18" fill="#7fb7e4"/>
+  <rect x="336" y="242" width="116" height="226" rx="18" fill="#4f97d2"/>
+  <rect x="496" y="326" width="116" height="142" rx="18" fill="#9dc7e8"/>
+  <rect x="686" y="252" width="286" height="24" rx="12" fill="#173d72"/>
+  <rect x="686" y="318" width="338" height="20" rx="10" fill="#91a8c2"/>
+  <rect x="686" y="374" width="292" height="20" rx="10" fill="#c3cfdd"/>
+  <rect x="686" y="430" width="218" height="20" rx="10" fill="#d8e0ea"/>
+  <path d="M186 520h840" stroke="#e5ebf2" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="236" cy="190" r="14" fill="#4f97d2"/>
+  <circle cx="286" cy="190" r="14" fill="#7fb7e4"/>
+</svg>

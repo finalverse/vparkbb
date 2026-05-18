@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Sports editorial image">
+  <rect width="1200" height="675" fill="#eef5ec"/>
+  <rect y="410" width="1200" height="265" fill="#b8d3b8"/>
+  <path d="M0 478h1200" stroke="#ffffff" stroke-width="18"/>
+  <path d="M600 410v265" stroke="#ffffff" stroke-width="14"/>
+  <circle cx="600" cy="478" r="102" fill="none" stroke="#ffffff" stroke-width="14"/>
+  <circle cx="376" cy="284" r="116" fill="#f5f0df"/>
+  <path d="M304 216c62 42 112 42 150 0M292 336c70-36 126-36 168 0M376 168v232M260 284h232" fill="none" stroke="#17324a" stroke-width="16" stroke-linecap="round"/>
+  <path d="M770 174l72 134 148 28-104 108 18 150-134-64-136 64 20-150-106-108 148-28z" fill="#f0b35b"/>
+  <path d="M770 236l44 82 92 18-64 66 12 92-84-40-84 40 12-92-64-66 92-18z" fill="#b04d2f"/>
+</svg>

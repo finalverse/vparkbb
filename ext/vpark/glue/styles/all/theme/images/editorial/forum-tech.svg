@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Technology editorial image">
+  <rect width="1200" height="675" fill="#eef4f7"/>
+  <rect x="150" y="128" width="608" height="390" rx="32" fill="#17324a"/>
+  <rect x="190" y="172" width="528" height="284" rx="12" fill="#dfeff0"/>
+  <path d="M246 242h176M246 306h292M246 370h212" stroke="#0d6b75" stroke-width="20" stroke-linecap="round"/>
+  <path d="M512 246l78 78-78 78M402 246l-78 78 78 78" fill="none" stroke="#b04d2f" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="812" y="210" width="210" height="326" rx="30" fill="#ffffff"/>
+  <rect x="840" y="258" width="154" height="214" rx="14" fill="#d7e4df"/>
+  <circle cx="918" cy="504" r="18" fill="#17324a"/>
+  <path d="M374 518h160l34 70H340z" fill="#425663"/>
+</svg>

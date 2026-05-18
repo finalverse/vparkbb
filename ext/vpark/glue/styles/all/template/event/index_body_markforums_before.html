@@ -1,15 +1,132 @@
-<div class="vpark-forum-panel">
-	<h3 class="vpark-forum-panel__title">{{ lang('VPARK_FORUM_PANEL_TITLE') }}</h3>
-	<p class="vpark-forum-panel__subtitle">{{ lang('VPARK_FORUM_PANEL_SUBTITLE') }}</p>
-	<ul class="vpark-forum-panel__grid">
-		{% for forum in vpark_forum_panel %}
-			<li class="vpark-forum-panel__item">
-				<a class="vpark-forum-panel__item-title" href="{{ forum.U_FORUM }}">{{ forum.TITLE }}</a>
-				<div class="vpark-forum-panel__item-subtitle">{{ forum.SUBTITLE }}</div>
-				{% if forum.METRIC %}
-					<span class="vpark-forum-panel__metric">{{ forum.METRIC }}</span>
-				{% endif %}
-			</li>
-		{% endfor %}
-	</ul>
+{% if S_VPARK_INDEX_PAGE %}
+<section class="vpark-sponsored-strip" aria-label="广告合作 / Sponsored">
+	{% if VPARK_HOME_AD_IMAGE_URL %}
+		{% if U_VPARK_HOME_AD_TARGET %}
+			<a class="vpark-sponsored-strip__image-link" href="{{ U_VPARK_HOME_AD_TARGET }}" target="_blank" rel="noopener noreferrer">
+		{% endif %}
+		<img class="vpark-sponsored-strip__image" src="{{ VPARK_HOME_AD_IMAGE_URL }}" alt="{% if VPARK_HOME_AD_CUSTOM_TITLE %}{{ VPARK_HOME_AD_CUSTOM_TITLE }}{% else %}广告合作 / Sponsored{% endif %}" />
+		{% if U_VPARK_HOME_AD_TARGET %}
+			</a>
+		{% endif %}
+	{% else %}
+		<div class="vpark-sponsored-strip__label">广告合作 / Sponsored</div>
+		<div class="vpark-sponsored-strip__copy">
+			<strong>{% if VPARK_HOME_AD_CUSTOM_TITLE %}{{ VPARK_HOME_AD_CUSTOM_TITLE }}{% else %}维园广告合作{% endif %}</strong>
+			<span>{% if VPARK_HOME_AD_CUSTOM_DESC %}{{ VPARK_HOME_AD_CUSTOM_DESC }}{% else %}Reserved placement for community partners and sponsored messages.{% endif %}</span>
+		</div>
+	{% endif %}
+</section>
+{% endif %}
+
+{% if S_VPARK_INDEX_PAGE %}
+<div class="vpark-breaking-news" aria-label="{{ lang('VPARK_BREAKING_LABEL') }}">
+	<div class="vpark-breaking-news__label">{{ lang('VPARK_BREAKING_LABEL') }}</div>
+	<div class="vpark-breaking-news__viewport">
+		<div class="vpark-breaking-news__track">
+			<div class="vpark-breaking-news__loop">
+				{% for item in vpark_breaking_news %}
+					<a class="vpark-breaking-news__item" href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+					<span class="vpark-breaking-news__sep">/</span>
+				{% else %}
+					<a class="vpark-breaking-news__item" href="{{ U_INDEX }}">{{ lang('VPARK_BREAKING_EMPTY') }}</a>
+					<span class="vpark-breaking-news__sep">/</span>
+				{% endfor %}
+			</div>
+			<div class="vpark-breaking-news__loop" aria-hidden="true">
+				{% for item in vpark_breaking_news %}
+					<a class="vpark-breaking-news__item" href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a>
+					<span class="vpark-breaking-news__sep">/</span>
+				{% else %}
+					<a class="vpark-breaking-news__item" href="{{ U_INDEX }}">{{ lang('VPARK_BREAKING_EMPTY') }}</a>
+					<span class="vpark-breaking-news__sep">/</span>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 </div>
+{% endif %}
+
+{% if S_VPARK_INDEX_PAGE and S_VPARK_HOME_NEWS %}
+<div class="vpark-portal-shell">
+	<section class="vpark-portal-lead" aria-label="{{ lang('VPARK_HOME_NEWS_TITLE') }}">
+		<div class="vpark-portal-section-head">
+			<div>
+				<div class="vpark-section-kicker">VictoriaPark</div>
+				<h2>{{ lang('VPARK_HOME_NEWS_TITLE') }}</h2>
+			</div>
+			<a href="{{ U_VPARK_NEWS_FORUM }}">{{ lang('VPARK_HOME_NEWS_MORE') }}</a>
+		</div>
+
+		<article class="vpark-portal-hero">
+			<a class="vpark-portal-hero__image" href="{{ U_VPARK_HOME_HERO }}">
+				<img src="{{ VPARK_HOME_HERO_IMAGE }}" alt="{{ VPARK_HOME_HERO_TITLE|e('html_attr') }}" loading="eager" />
+			</a>
+			<div class="vpark-portal-hero__body">
+				<div class="vpark-story-kicker">{{ VPARK_HOME_HERO_FORUM }}</div>
+				<h2><a href="{{ U_VPARK_HOME_HERO }}">{{ VPARK_HOME_HERO_TITLE }}</a></h2>
+				{% if VPARK_HOME_HERO_EXCERPT %}<p>{{ VPARK_HOME_HERO_EXCERPT }}</p>{% endif %}
+				<div class="vpark-story-meta">
+					{% if VPARK_HOME_HERO_AUTHOR %}<span>{{ VPARK_HOME_HERO_AUTHOR }}</span>{% endif %}
+					{% if VPARK_HOME_HERO_TIME %}<span>{{ VPARK_HOME_HERO_TIME }}</span>{% endif %}
+					<span>{{ VPARK_HOME_HERO_COMMENTS }} 评论</span>
+				</div>
+			</div>
+		</article>
+	</section>
+
+	{% if S_VPARK_HOME_STORIES %}
+	<section class="vpark-portal-section" aria-label="社区精选">
+		<div class="vpark-portal-section-head vpark-portal-section-head--compact">
+			<div>
+				<div class="vpark-section-kicker">Community Picks</div>
+				<h2>社区精选</h2>
+			</div>
+		</div>
+		<div class="vpark-secondary-grid">
+			{% for item in vpark_home_stories %}
+				<article class="vpark-story-card">
+					<a class="vpark-story-card__image" href="{{ item.U_TOPIC }}">
+						<img src="{{ item.IMAGE }}" alt="{{ item.TITLE|e('html_attr') }}" loading="lazy" />
+					</a>
+					<div class="vpark-story-card__body">
+						<div class="vpark-story-kicker">{{ item.FORUM_NAME }}</div>
+						<h3><a href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a></h3>
+						{% if item.EXCERPT %}<p>{{ item.EXCERPT }}</p>{% endif %}
+							<div class="vpark-story-meta">
+								{% if item.AUTHOR %}<span>{{ item.AUTHOR }}</span>{% endif %}
+								{% if item.TIME %}<span>{{ item.TIME }}</span>{% endif %}
+								<span>{{ item.COMMENTS }} 评论</span>
+							</div>
+						</div>
+					</article>
+			{% endfor %}
+		</div>
+	</section>
+	{% endif %}
+
+	{% if S_VPARK_HOME_HOT %}
+	<section class="vpark-discussion-section" aria-label="热门讨论">
+		<div class="vpark-portal-section-head vpark-portal-section-head--compact">
+			<div>
+				<div class="vpark-section-kicker">VictoriaPark Forum</div>
+				<h2>热门讨论</h2>
+			</div>
+		</div>
+		<div class="vpark-discussion-list">
+			{% for item in vpark_hot_discussions %}
+				<article class="vpark-discussion-card">
+					<div class="vpark-story-kicker">{{ item.FORUM_NAME }}</div>
+					<h3><a href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a></h3>
+					{% if item.EXCERPT %}<p>{{ item.EXCERPT }}</p>{% endif %}
+					<div class="vpark-story-meta">
+						{% if item.AUTHOR %}<span>{{ item.AUTHOR }}</span>{% endif %}
+						{% if item.TIME %}<span>{{ item.TIME }}</span>{% endif %}
+						<span>{{ item.COMMENTS }} 评论</span>
+					</div>
+				</article>
+			{% endfor %}
+		</div>
+	</section>
+	{% endif %}
+</div>
+{% endif %}

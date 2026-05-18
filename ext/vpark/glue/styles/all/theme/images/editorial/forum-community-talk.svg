@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Community discussion editorial image">
+  <rect width="1200" height="675" fill="#f5f7fa"/>
+  <rect x="116" y="112" width="424" height="268" rx="38" fill="#ffffff" stroke="#dfe6ef" stroke-width="12"/>
+  <rect x="174" y="178" width="248" height="24" rx="12" fill="#173d72"/>
+  <rect x="174" y="236" width="302" height="20" rx="10" fill="#a8b6c8"/>
+  <rect x="174" y="286" width="218" height="20" rx="10" fill="#ccd6e3"/>
+  <path d="M250 380l-70 78 142-58" fill="#ffffff" stroke="#dfe6ef" stroke-width="12" stroke-linejoin="round"/>
+  <rect x="610" y="218" width="456" height="288" rx="38" fill="#eaf1f9" stroke="#d3dfec" stroke-width="12"/>
+  <rect x="676" y="286" width="270" height="24" rx="12" fill="#245b9f"/>
+  <rect x="676" y="348" width="318" height="20" rx="10" fill="#89a9cf"/>
+  <rect x="676" y="400" width="226" height="20" rx="10" fill="#b8c8da"/>
+  <path d="M866 506l104 64-36-94" fill="#eaf1f9" stroke="#d3dfec" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="450" cy="500" r="46" fill="#245b9f"/>
+  <circle cx="548" cy="500" r="46" fill="#7aa2d0"/>
+  <circle cx="646" cy="500" r="46" fill="#173d72"/>
+</svg>
