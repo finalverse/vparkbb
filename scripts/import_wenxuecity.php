@@ -34,6 +34,7 @@ $options = getopt('', array(
 	'forum:',
 	'forum-id:',
 	'max-list-pages:',
+	'cleanup-existing-metadata',
 	'help',
 ));
 
@@ -49,6 +50,8 @@ Options:
   --forum-id <id>       Target phpBB forum id. Must be an existing postable forum.
   --forum <name>        Target phpBB forum name. Must be an existing postable forum.
   --max-list-pages <n>  Max Wenxuecity listing pages to crawl. Default scales with --limit.
+  --cleanup-existing-metadata
+                        Remove the old public metadata block from imported Wenxuecity posts.
   --help                Show this help.
 
 Examples:
@@ -56,6 +59,7 @@ Examples:
   php scripts/import_wenxuecity.php --dry-run
   php scripts/import_wenxuecity.php --forum-id 2
   php scripts/import_wenxuecity.php --forum "百家论坛"
+  php scripts/import_wenxuecity.php --cleanup-existing-metadata --limit 20
 
 USAGE;
 	exit(0);
@@ -66,6 +70,7 @@ $dry_run = isset($options['dry-run']);
 $target_forum_name = isset($options['forum']) ? trim((string) $options['forum']) : '';
 $target_forum_id = isset($options['forum-id']) ? (int) $options['forum-id'] : 0;
 $max_list_pages = max(1, (int) ($options['max-list-pages'] ?? min(24, max(8, $limit))));
+$cleanup_existing_metadata = isset($options['cleanup-existing-metadata']);
 
 if ($target_forum_name !== '' && $target_forum_id > 0)
 {
@@ -85,7 +90,19 @@ if (isset($options['forum-id']) && $target_forum_id <= 0)
 $import_table = $table_prefix . 'wenxuecity_imports';
 $import_table_ready = import_table_exists($import_table);
 
-out('start: limit=' . $limit . ($dry_run ? ', dry-run=1' : ''));
+out('start: limit=' . $limit . ($cleanup_existing_metadata ? ', cleanup-existing-metadata=1' : '') . ($dry_run ? ', dry-run=1' : ''));
+
+if ($cleanup_existing_metadata)
+{
+	if (!$import_table_ready)
+	{
+		fail('Import metadata table does not exist: ' . $import_table);
+	}
+
+	$cleaned = cleanup_existing_metadata_posts($import_table, $limit, $dry_run);
+	out('cleanup done: cleaned=' . $cleaned);
+	exit(0);
+}
 
 $target_forum = resolve_target_forum($target_forum_id, $target_forum_name);
 out('selected target forum id: ' . (int) $target_forum['forum_id']);
@@ -528,7 +545,7 @@ function parse_article_page(string $source_url, string $html): ?array
 		'//*[@itemprop="author"]',
 	));
 	$meta_text = first_text($xpath, array('//*[@id="postmeta"]')) ?: '';
-	if ($author === '' && preg_match('/文章来源:\s*([^\s]+)\s+于/u', $meta_text, $matches))
+	if ($author === '' && preg_match('/文章\x{6765}\x{6e90}:\s*([^\s]+)\s+于/u', $meta_text, $matches))
 	{
 		$author = clean_text($matches[1]);
 	}
@@ -856,20 +873,123 @@ function category_from_url(string $url, DOMXPath $xpath): string
 
 function build_post_body(array $article): string
 {
-	$lines = array();
-	$lines[] = '[b]来源[/b]：文学城' . ($article['author'] !== '' ? ' / ' . $article['author'] : '');
-	$lines[] = '[b]分类[/b]：' . ($article['category'] !== '' ? $article['category'] : '新闻');
-	if ((int) $article['publish_time'] > 0)
+	$body = html_to_bbcode((string) ($article['body_html'] ?? ''));
+	if ($body !== '')
 	{
-		$lines[] = '[b]发布时间[/b]：' . gmdate('Y-m-d H:i:s', (int) $article['publish_time']) . ' UTC';
+		return $body;
 	}
-	$lines[] = '[b]原文链接[/b]：[url=' . $article['source_url'] . ']' . $article['source_url'] . '[/url]';
-	$lines[] = '';
-	$lines[] = str_repeat('-', 36);
-	$lines[] = '';
-	$lines[] = html_to_bbcode($article['body_html']);
 
-	return trim(implode("\n", $lines));
+	return clean_text((string) ($article['body_text'] ?? ''));
+}
+
+function cleanup_existing_metadata_posts(string $table_name, int $limit, bool $dry_run): int
+{
+	global $db;
+
+	$sql = 'SELECT i.import_id, i.topic_id, i.post_id, i.body_html, i.body_text, i.title, p.post_text
+		FROM ' . $table_name . ' i
+		INNER JOIN ' . POSTS_TABLE . ' p
+			ON p.post_id = i.post_id
+		WHERE i.post_id > 0
+		ORDER BY i.import_id DESC';
+	$result = $db->sql_query_limit($sql, $limit);
+
+	$rows = array();
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$rows[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	$cleaned = 0;
+	if (!$dry_run)
+	{
+		$db->sql_transaction('begin');
+	}
+
+	foreach ($rows as $row)
+	{
+		if (!has_public_metadata_block((string) $row['post_text']))
+		{
+			continue;
+		}
+
+		$message = build_post_body(array(
+			'body_html' => (string) $row['body_html'],
+			'body_text' => (string) $row['body_text'],
+		));
+		if ($message === '')
+		{
+			$message = remove_metadata_from_stored_post((string) $row['post_text']);
+		}
+		if ($message === '')
+		{
+			out('cleanup skipped: post_id=' . (int) $row['post_id'] . ' reason=empty_body');
+			continue;
+		}
+
+		if ($dry_run)
+		{
+			out('[dry-run] would clean post_id=' . (int) $row['post_id'] . ' topic_id=' . (int) $row['topic_id'] . ' title=' . (string) $row['title']);
+			$cleaned++;
+			continue;
+		}
+
+		update_post_message((int) $row['post_id'], $message);
+		$cleaned++;
+		out('cleaned post_id=' . (int) $row['post_id'] . ' topic_id=' . (int) $row['topic_id'] . ' title=' . (string) $row['title']);
+	}
+
+	if (!$dry_run)
+	{
+		$db->sql_transaction('commit');
+	}
+
+	return $cleaned;
+}
+
+function has_public_metadata_block(string $post_text): bool
+{
+	$prefix = utf8_substr($post_text, 0, 2400);
+	$has_label = strpos($prefix, '来源') !== false ||
+		strpos($prefix, '分类') !== false ||
+		strpos($prefix, '发布时间') !== false ||
+		strpos($prefix, '原文链接') !== false;
+
+	return $has_label && strpos($prefix, '------------------------------------') !== false;
+}
+
+function remove_metadata_from_stored_post(string $post_text): string
+{
+	$text = preg_replace('#<br\s*/?>#i', "\n", $post_text) ?: $post_text;
+	$text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	$text = preg_replace('/^\s*(?:\[b\])?(?:来源|分类|发布时间|原文链接)(?:\[\/b\])?[：:].*$/mu', '', $text) ?: $text;
+	$text = preg_replace('/^\s*-{8,}\s*$/mu', '', $text) ?: $text;
+	$text = preg_replace("/[ \t]+\n/u", "\n", $text) ?: $text;
+	$text = preg_replace("/\n{3,}/u", "\n\n", $text) ?: $text;
+
+	return trim($text);
+}
+
+function update_post_message(int $post_id, string $message): void
+{
+	global $db;
+
+	$prepared = prepare_post_text($message);
+	$sql_ary = array(
+		'post_text' => $prepared['message'],
+		'post_checksum' => md5((string) $prepared['message']),
+		'bbcode_bitfield' => $prepared['bitfield'],
+		'bbcode_uid' => $prepared['uid'],
+		'enable_bbcode' => 1,
+		'enable_smilies' => 1,
+		'enable_magic_url' => 1,
+	);
+
+	$sql = 'UPDATE ' . POSTS_TABLE . '
+		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		WHERE post_id = ' . (int) $post_id;
+	$db->sql_query($sql);
 }
 
 function html_to_bbcode(string $html): string
