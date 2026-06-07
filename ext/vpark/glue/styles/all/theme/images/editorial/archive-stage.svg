@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Stage archive illustration">
+  <rect width="1200" height="675" fill="#ede2cf"/>
+  <path d="M126 108h948v458H126z" fill="#172638" stroke="#9b7a47" stroke-width="8"/>
+  <path d="M188 178h824v284H188z" fill="#fffaf0" opacity=".08" stroke="#b55829" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M224 156c42 142 38 260-18 356M976 156c-42 142-38 260 18 356" fill="none" stroke="#b55829" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="600" cy="292" r="72" fill="none" stroke="#f2e7d3" stroke-width="14"/>
+  <path d="M512 428c52-64 124-72 176 0" fill="none" stroke="#f2e7d3" stroke-width="14" stroke-linecap="round"/>
+  <path d="M300 512h600" stroke="#9b7a47" stroke-width="13" stroke-linecap="round"/>
+</svg>

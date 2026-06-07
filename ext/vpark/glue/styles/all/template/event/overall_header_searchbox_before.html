@@ -1,9 +1,54 @@
 <div class="vpark-header-center" role="navigation" aria-label="{{ lang('VPARK_FORUM_PANEL_TITLE') }}">
-	<div class="vpark-header-forum-compact">
+	<div class="vpark-header-forum-compact vpark-mp-btn-list">
 		{% for forum in vpark_forum_panel %}
-			<a class="vpark-header-forum-compact__item" href="{{ forum.U_FORUM }}">{{ forum.TITLE }}</a>
+			{% if not S_VPARK_INDEX_PAGE or loop.index <= 9 %}
+				<a class="vpark-header-forum-compact__item vpark-mp-btn{% if S_VPARK_INDEX_PAGE and loop.index > 9 %} vpark-mp-btn--extra{% endif %}" href="{{ forum.U_FORUM }}" title="{{ forum.TITLE }}{% if forum.SUBTITLE %} - {{ forum.SUBTITLE }}{% endif %}">
+					<span class="vpark-header-forum-compact__glyph" aria-hidden="true"></span>
+					<span class="vpark-header-forum-compact__copy">
+						<span class="vpark-header-forum-compact__en">{% if forum.METRIC %}{{ forum.METRIC }}{% else %}Forum{% endif %}</span>
+						<span class="vpark-header-forum-compact__title">{{ forum.TITLE }}</span>
+					</span>
+				</a>
+			{% endif %}
 		{% endfor %}
+		{% if S_VPARK_INDEX_PAGE %}
+			{% if S_VPARK_FORUM_PANEL_MORE %}
+				<button class="vpark-header-forum-compact__item vpark-mp-btn vpark-mp-btn--more" type="button" aria-expanded="false" aria-controls="vpark-extra-forums" data-vpark-forum-toggle>
+					<span class="vpark-header-forum-compact__glyph" aria-hidden="true"></span>
+					<span class="vpark-header-forum-compact__copy">
+						<span class="vpark-header-forum-compact__en">Index</span>
+						<span class="vpark-header-forum-compact__title" data-vpark-more-label data-label-collapsed="&#26356;&#22810;&#29256;&#22359;" data-label-expanded="&#25910;&#36215;&#29256;&#22359;">&#26356;&#22810;&#29256;&#22359;</span>
+					</span>
+				</button>
+			{% else %}
+				<a class="vpark-header-forum-compact__item vpark-mp-btn vpark-mp-btn--more" href="{{ U_INDEX }}">
+					<span class="vpark-header-forum-compact__glyph" aria-hidden="true"></span>
+					<span class="vpark-header-forum-compact__copy">
+						<span class="vpark-header-forum-compact__en">Index</span>
+						<span class="vpark-header-forum-compact__title">&#26356;&#22810;&#29256;&#22359;</span>
+					</span>
+				</a>
+			{% endif %}
+		{% endif %}
 	</div>
+	{% if S_VPARK_INDEX_PAGE and S_VPARK_FORUM_PANEL_MORE %}
+		<div id="vpark-extra-forums" class="vpark-extra-forum-panel vpark-mp-infobox" hidden tabindex="-1">
+			<div class="vpark-extra-forum-panel__head">
+				<span class="vpark-extra-forum-panel__kicker">Archive Index</span>
+				<strong>&#20840;&#37096;&#29256;&#22359;</strong>
+			</div>
+			<div class="vpark-extra-forum-panel__grid">
+				{% for forum in vpark_forum_panel %}
+					{% if loop.index > 9 %}
+						<a class="vpark-extra-forum-panel__item" href="{{ forum.U_FORUM }}" title="{{ forum.TITLE }}{% if forum.SUBTITLE %} - {{ forum.SUBTITLE }}{% endif %}">
+							<span class="vpark-extra-forum-panel__title">{{ forum.TITLE }}</span>
+							{% if forum.SUBTITLE %}<span class="vpark-extra-forum-panel__desc">{{ forum.SUBTITLE }}</span>{% endif %}
+						</a>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
 </div>
 {% if not S_VPARK_INDEX_PAGE %}
 <div class="vpark-header-right-ad" aria-label="{{ VPARK_HEADER_AD_TITLE }}">

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Historical timeline illustration">
+  <rect width="1200" height="675" fill="#f2e7d3"/>
+  <path d="M154 136h892v404H154z" fill="#fffaf0" stroke="#9b7a47" stroke-width="8"/>
+  <path d="M228 340h744" stroke="#243d56" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="286" cy="340" r="34" fill="#b55829"/><circle cx="492" cy="340" r="34" fill="#386b73"/><circle cx="698" cy="340" r="34" fill="#b55829"/><circle cx="904" cy="340" r="34" fill="#386b73"/>
+  <path d="M250 220h150M456 456h150M662 218h150M866 454h150" stroke="#243d56" stroke-width="15" stroke-linecap="round" opacity=".72"/>
+  <path d="M250 264h100M456 500h100M662 262h100M866 498h100" stroke="#9b7a47" stroke-width="10" stroke-linecap="round"/>
+  <path d="M190 176h820M190 500h820" stroke="#d8cbb5" stroke-width="6"/>
+</svg>

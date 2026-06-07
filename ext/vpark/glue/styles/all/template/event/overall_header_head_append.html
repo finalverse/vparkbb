@@ -716,3 +716,35 @@ body#phpbb #search-box.search-header {
 }
 </style>
 <link href="./ext/vpark/glue/styles/all/theme/vpark_portal.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet">
+{% if S_VPARK_INDEX_PAGE %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	var toggle = document.querySelector('[data-vpark-forum-toggle]');
+	if (!toggle) {
+		return;
+	}
+
+	var panel = document.getElementById(toggle.getAttribute('aria-controls'));
+	if (!panel) {
+		return;
+	}
+
+	var label = toggle.querySelector('[data-vpark-more-label]');
+	var setOpen = function (isOpen) {
+		toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+		toggle.classList.toggle('is-expanded', isOpen);
+		document.body.classList.toggle('vpark-forums-open', isOpen);
+		panel.hidden = !isOpen;
+		panel.classList.toggle('is-open', isOpen);
+		if (label) {
+			label.textContent = isOpen ? label.dataset.labelExpanded : label.dataset.labelCollapsed;
+		}
+	};
+
+	setOpen(false);
+	toggle.addEventListener('click', function () {
+		setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+	});
+});
+</script>
+{% endif %}

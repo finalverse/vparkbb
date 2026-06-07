@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Ledger and markets illustration">
+  <rect width="1200" height="675" fill="#f1e8d8"/>
+  <path d="M118 92h964v492H118z" fill="#fffaf0" stroke="#9b7a47" stroke-width="8"/>
+  <path d="M210 170h780M210 248h780M210 326h780M210 404h780M210 482h780M356 126v412M526 126v412M696 126v412M866 126v412" stroke="#d8cbb5" stroke-width="6"/>
+  <path d="M236 454c122-138 194-112 268-70 88 50 146 18 216-82 78-112 144-124 252-48" fill="none" stroke="#243d56" stroke-width="22" stroke-linecap="round"/>
+  <path d="M914 214l82 36-72 54" fill="none" stroke="#243d56" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="236" cy="454" r="18" fill="#b55829"/><circle cx="502" cy="384" r="18" fill="#386b73"/><circle cx="720" cy="302" r="18" fill="#b55829"/>
+  <path d="M178 126v412" stroke="#b55829" stroke-width="10"/>
+</svg>

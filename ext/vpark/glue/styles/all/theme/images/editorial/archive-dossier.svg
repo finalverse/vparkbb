@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Archive dossier illustration">
+  <rect width="1200" height="675" fill="#ede2cf"/>
+  <path d="M0 0h1200v675H0z" fill="#fff8ea" opacity=".58"/>
+  <path d="M76 86h1048v504H76z" fill="#f7eddb" stroke="#9f7941" stroke-width="8"/>
+  <path d="M138 152h390v362H138z" fill="#fffaf0" stroke="#b55829" stroke-width="5" stroke-dasharray="12 12"/>
+  <path d="M596 150h430M596 214h352M596 278h410M596 342h292M596 406h370" stroke="#243d56" stroke-width="18" stroke-linecap="round" opacity=".72"/>
+  <path d="M190 224h286M190 286h224M190 348h258" stroke="#386b73" stroke-width="14" stroke-linecap="round"/>
+  <path d="M196 446c72-80 132-110 210-56 36 24 66 26 110 4" fill="none" stroke="#9b7a47" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="1004" cy="512" r="54" fill="none" stroke="#b55829" stroke-width="10"/>
+  <path d="M964 512h80M1004 472v80" stroke="#b55829" stroke-width="8" stroke-linecap="round"/>
+</svg>

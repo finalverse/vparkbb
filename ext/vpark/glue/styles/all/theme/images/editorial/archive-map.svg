@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Archive map illustration">
+  <rect width="1200" height="675" fill="#e9edf0"/>
+  <path d="M98 98h1004v480H98z" fill="#f8f1e4" stroke="#526f83" stroke-width="8"/>
+  <path d="M236 168c88-38 160-24 220 42 48 52 126 52 194 22 78-34 144-8 210 54 54 50 110 58 174 42v140H236z" fill="#d7ded5" stroke="#386b73" stroke-width="7"/>
+  <path d="M272 276c52-66 116-88 188-48 54 30 88 92 158 64 92-36 120-112 224-86 72 18 112 82 152 124" fill="none" stroke="#b55829" stroke-width="11" stroke-linecap="round" stroke-dasharray="18 18"/>
+  <path d="M178 154v370M1022 154v370M178 154h844M178 524h844" stroke="#9b7a47" stroke-width="5"/>
+  <circle cx="466" cy="238" r="20" fill="#243d56"/><circle cx="734" cy="274" r="20" fill="#243d56"/><circle cx="954" cy="330" r="20" fill="#243d56"/>
+  <path d="M206 554h788" stroke="#243d56" stroke-width="12" stroke-linecap="round"/>
+</svg>

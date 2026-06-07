@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Culture manuscript illustration">
+  <rect width="1200" height="675" fill="#eee6d7"/>
+  <path d="M184 116h366c56 0 96 32 120 78 24-46 64-78 120-78h226v428H780c-52 0-88 22-110 58-22-36-58-58-110-58H184z" fill="#fffaf0" stroke="#9b7a47" stroke-width="8"/>
+  <path d="M670 188v388" stroke="#d8cbb5" stroke-width="8"/>
+  <path d="M246 198h248M246 264h310M246 330h236M246 396h280M760 198h176M760 264h206M760 330h150M760 396h190" stroke="#243d56" stroke-width="15" stroke-linecap="round" opacity=".76"/>
+  <path d="M246 474c72-62 126-68 176-20s100 44 150-12" fill="none" stroke="#b55829" stroke-width="11" stroke-linecap="round"/>
+  <path d="M842 472c48-52 92-48 132 0" fill="none" stroke="#386b73" stroke-width="11" stroke-linecap="round"/>
+</svg>

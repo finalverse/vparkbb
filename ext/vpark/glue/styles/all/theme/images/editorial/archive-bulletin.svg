@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Community bulletin illustration">
+  <rect width="1200" height="675" fill="#e7e1d3"/>
+  <path d="M92 86h1016v506H92z" fill="#eef3ed" stroke="#386b73" stroke-width="8"/>
+  <path d="M148 146h258v170H148zM472 132h282v206H472zM820 160h220v156H820zM222 386h306v128H222zM610 390h340v128H610z" fill="#fffaf0" stroke="#9b7a47" stroke-width="6"/>
+  <path d="M180 198h182M180 242h142M504 190h210M504 244h158M504 296h190M852 214h150M254 438h228M642 444h258" stroke="#243d56" stroke-width="13" stroke-linecap="round" opacity=".78"/>
+  <circle cx="148" cy="146" r="16" fill="#b55829"/><circle cx="472" cy="132" r="16" fill="#b55829"/><circle cx="820" cy="160" r="16" fill="#b55829"/>
+  <path d="M96 86l90-54h828l94 54" fill="none" stroke="#243d56" stroke-width="10" stroke-linecap="round"/>
+</svg>

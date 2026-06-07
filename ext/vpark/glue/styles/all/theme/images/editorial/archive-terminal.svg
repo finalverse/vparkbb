@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Technology archive illustration">
+  <rect width="1200" height="675" fill="#e6ece7"/>
+  <path d="M120 102h960v470H120z" fill="#102434" stroke="#8ea6b5" stroke-width="8"/>
+  <path d="M172 166h856" stroke="#526f83" stroke-width="8"/>
+  <circle cx="190" cy="136" r="12" fill="#b55829"/><circle cx="230" cy="136" r="12" fill="#9b7a47"/><circle cx="270" cy="136" r="12" fill="#386b73"/>
+  <path d="M210 236l86 66-86 66M342 376h236" fill="none" stroke="#e8eee8" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M690 238h190M690 304h258M690 370h150M690 436h230" stroke="#bcd0ce" stroke-width="14" stroke-linecap="round"/>
+  <path d="M162 586h876" stroke="#9b7a47" stroke-width="10" stroke-linecap="round"/>
+</svg>

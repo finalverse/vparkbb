@@ -1,5 +1,5 @@
 {% if S_VPARK_INDEX_PAGE %}
-<section class="vpark-sponsored-strip" aria-label="广告合作 / Sponsored">
+<section class="vpark-sponsored-strip vpark-mp-infobox vpark-mp-sponsored" aria-label="广告合作 / Sponsored">
 	{% if VPARK_HOME_AD_IMAGE_URL %}
 		{% if U_VPARK_HOME_AD_TARGET %}
 			<a class="vpark-sponsored-strip__image-link" href="{{ U_VPARK_HOME_AD_TARGET }}" target="_blank" rel="noopener noreferrer">
@@ -19,7 +19,7 @@
 {% endif %}
 
 {% if S_VPARK_INDEX_PAGE %}
-<div class="vpark-breaking-news" aria-label="{{ lang('VPARK_BREAKING_LABEL') }}">
+<div class="vpark-breaking-news vpark-mp-ticker" aria-label="{{ lang('VPARK_BREAKING_LABEL') }}">
 	<div class="vpark-breaking-news__label">{{ lang('VPARK_BREAKING_LABEL') }}</div>
 	<div class="vpark-breaking-news__viewport">
 		<div class="vpark-breaking-news__track">
@@ -47,8 +47,8 @@
 {% endif %}
 
 {% if S_VPARK_INDEX_PAGE and S_VPARK_HOME_NEWS %}
-<div class="vpark-portal-shell">
-	<section class="vpark-portal-lead" aria-label="{{ lang('VPARK_HOME_NEWS_TITLE') }}">
+<div class="vpark-portal-shell vpark-mp-dashboard">
+	<section class="vpark-portal-lead vpark-mp-feature" aria-label="{{ lang('VPARK_HOME_NEWS_TITLE') }}">
 		<div class="vpark-portal-section-head">
 			<div>
 				<div class="vpark-section-kicker">VictoriaPark</div>
@@ -57,7 +57,7 @@
 			<a href="{{ U_VPARK_NEWS_FORUM }}">{{ lang('VPARK_HOME_NEWS_MORE') }}</a>
 		</div>
 
-		<article class="vpark-portal-hero">
+		<article class="vpark-portal-hero vpark-mp-infobox">
 			<a class="vpark-portal-hero__image" href="{{ U_VPARK_HOME_HERO }}">
 				<img src="{{ VPARK_HOME_HERO_IMAGE }}" alt="{{ VPARK_HOME_HERO_TITLE|e('html_attr') }}" loading="eager" />
 			</a>
@@ -75,7 +75,7 @@
 	</section>
 
 	{% if S_VPARK_HOME_STORIES %}
-	<section class="vpark-portal-section" aria-label="社区精选">
+	<section class="vpark-portal-section vpark-mp-picks" aria-label="社区精选">
 		<div class="vpark-portal-section-head vpark-portal-section-head--compact">
 			<div>
 				<div class="vpark-section-kicker">Community Picks</div>
@@ -84,7 +84,7 @@
 		</div>
 		<div class="vpark-secondary-grid">
 			{% for item in vpark_home_stories %}
-				<article class="vpark-story-card">
+				<article class="vpark-story-card vpark-mp-infobox">
 					<a class="vpark-story-card__image" href="{{ item.U_TOPIC }}">
 						<img src="{{ item.IMAGE }}" alt="{{ item.TITLE|e('html_attr') }}" loading="lazy" />
 					</a>
@@ -105,7 +105,7 @@
 	{% endif %}
 
 	{% if S_VPARK_HOME_HOT %}
-	<section class="vpark-discussion-section" aria-label="热门讨论">
+	<section class="vpark-discussion-section vpark-mp-activity" aria-label="热门讨论">
 		<div class="vpark-portal-section-head vpark-portal-section-head--compact">
 			<div>
 				<div class="vpark-section-kicker">VictoriaPark Forum</div>
@@ -114,7 +114,7 @@
 		</div>
 		<div class="vpark-discussion-list">
 			{% for item in vpark_hot_discussions %}
-				<article class="vpark-discussion-card">
+				<article class="vpark-discussion-card vpark-mp-note">
 					<div class="vpark-story-kicker">{{ item.FORUM_NAME }}</div>
 					<h3><a href="{{ item.U_TOPIC }}">{{ item.TITLE }}</a></h3>
 					{% if item.EXCERPT %}<p>{{ item.EXCERPT }}</p>{% endif %}

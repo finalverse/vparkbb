@@ -366,6 +366,9 @@ class listener implements EventSubscriberInterface
 	protected function assign_forum_panel_items()
 	{
 		$panel_items = $this->forum_panel_items();
+		$this->template->assign_vars(array(
+			'S_VPARK_FORUM_PANEL_MORE' => count($panel_items) > 9,
+		));
 
 		foreach ($panel_items as $item)
 		{
@@ -976,10 +979,16 @@ class listener implements EventSubscriberInterface
 		$slug = $this->forum_image_slug((int) $forum_id, (string) $forum_name);
 		$seed = (int) $topic_id > 0 ? ((int) floor((int) $topic_id / 8) + (int) $forum_id) : (int) $forum_id;
 		$variants = array(
-			'forum-finance' => array('forum-finance', 'forum-finance-brief', 'forum-finance-ledger'),
-			'forum-community' => array('forum-community', 'forum-community-talk'),
-			'forum-entertainment' => array('forum-entertainment', 'forum-entertainment-stage'),
-			'forum-generic' => array('forum-generic', 'forum-community-talk'),
+			'forum-world' => array('archive-map', 'archive-dossier'),
+			'forum-finance' => array('archive-ledger', 'archive-dossier'),
+			'forum-tech' => array('archive-terminal', 'archive-dossier'),
+			'forum-history' => array('archive-timeline', 'archive-map'),
+			'forum-sports' => array('archive-field', 'archive-dossier'),
+			'forum-entertainment' => array('archive-stage', 'archive-bulletin'),
+			'forum-lifestyle' => array('archive-life', 'archive-bulletin'),
+			'forum-culture' => array('archive-manuscript', 'archive-timeline'),
+			'forum-community' => array('archive-bulletin', 'archive-dossier'),
+			'forum-generic' => array('archive-dossier', 'archive-bulletin'),
 		);
 		if ($seed > 0 && isset($variants[$slug]))
 		{
@@ -1143,7 +1152,7 @@ class listener implements EventSubscriberInterface
 			$items[] = array(
 				'title'    => (string) $row['forum_name'],
 				'subtitle' => $desc,
-				'metric'   => '',
+				'metric'   => $this->forum_kicker((string) $row['forum_name']),
 				'forum_id' => (int) $row['forum_id'],
 			);
 		}
