@@ -6,6 +6,93 @@
 </li>
 {% endif %}
 {% if not S_IS_BOT %}
+<li class="rightside vpark-nav-theme" data-skip-responsive="true">
+	<div class="vpark-theme-selector" data-vpark-theme-selector>
+		<button type="button" id="vpark-theme-button" class="vpark-theme-selector__button" aria-haspopup="menu" aria-expanded="false" aria-controls="vpark-theme-menu">
+			<span class="vpark-theme-selector__icon" aria-hidden="true"><i class="icon fa-adjust fa-fw"></i></span>
+			<span class="vpark-theme-selector__label" data-vpark-theme-current>默认</span>
+		</button>
+		<div id="vpark-theme-menu" class="vpark-theme-selector__menu" role="menu" aria-labelledby="vpark-theme-button" hidden>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="default" data-vpark-theme-label="默认">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--default" aria-hidden="true"></span>
+				<span><strong>默认</strong><small>Default</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="system" data-vpark-theme-label="跟随系统">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--system" aria-hidden="true"></span>
+				<span><strong>跟随系统</strong><small>System</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="dark" data-vpark-theme-label="深色">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--dark" aria-hidden="true"></span>
+				<span><strong>深色</strong><small>Dark</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="light" data-vpark-theme-label="浅色">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--light" aria-hidden="true"></span>
+				<span><strong>浅色</strong><small>Light</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="carnaby" data-vpark-theme-label="卡纳比街">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--carnaby" aria-hidden="true"></span>
+				<span><strong>卡纳比街</strong><small>Carnaby Street</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="clinic" data-vpark-theme-label="诊疗室">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--clinic" aria-hidden="true"></span>
+				<span><strong>诊疗室</strong><small>Clinic</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="inside-suitcase-day" data-vpark-theme-label="箱中日景">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--inside-suitcase-day" aria-hidden="true"></span>
+				<span><strong>箱中日景</strong><small>Inside Suitcase Day</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="lighthouse-hill" data-vpark-theme-label="灯塔山丘">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--lighthouse-hill" aria-hidden="true"></span>
+				<span><strong>灯塔山丘</strong><small>Lighthouse Hill</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="login-scene" data-vpark-theme-label="登录场景">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--login-scene" aria-hidden="true"></span>
+				<span><strong>登录场景</strong><small>Login Scene</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="secession-building" data-vpark-theme-label="分离派建筑">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--secession-building" aria-hidden="true"></span>
+				<span><strong>分离派建筑</strong><small>Secession Building</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="ring-road" data-vpark-theme-label="环形街道">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--ring-road" aria-hidden="true"></span>
+				<span><strong>环形街道</strong><small>Ring Road</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="jazz-age" data-vpark-theme-label="爵士年代">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--jazz-age" aria-hidden="true"></span>
+				<span><strong>爵士年代</strong><small>The Jazz Age</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="zhu-rooftops" data-vpark-theme-label="朱郡屋脊">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--zhu-rooftops" aria-hidden="true"></span>
+				<span><strong>朱郡屋脊</strong><small>Zhu County Rooftops</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="zhu-street" data-vpark-theme-label="朱郡街巷">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--zhu-street" aria-hidden="true"></span>
+				<span><strong>朱郡街巷</strong><small>Zhu County Street</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="vpark-theme-selector__option" role="menuitemradio" aria-checked="false" data-vpark-theme-option="paris-streets" data-vpark-theme-label="巴黎街景">
+				<span class="vpark-theme-selector__swatch vpark-theme-selector__swatch--paris-streets" aria-hidden="true"></span>
+				<span><strong>巴黎街景</strong><small>Paris Streets</small></span>
+				<i class="icon fa-check fa-fw" aria-hidden="true"></i>
+			</button>
+		</div>
+	</div>
+</li>
+{% endif %}
+{% if not S_IS_BOT %}
 <li class="vpark-nav-search-item" data-skip-responsive="true">
 	<form action="{{ U_SEARCH }}" method="get" class="vpark-nav-search-form" role="search">
 		<input name="keywords" type="search" maxlength="128" title="{{ lang('SEARCH_KEYWORDS') }}" value="{{ SEARCH_WORDS }}" placeholder="{{ lang('SEARCH_MINI') }}" />

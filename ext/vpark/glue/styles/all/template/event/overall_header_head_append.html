@@ -1,3 +1,7 @@
+<link rel="icon" type="image/svg+xml" href="./styles/victoriaclassic/theme/images/favicon.svg?assets_version={T_ASSETS_VERSION}">
+<link rel="icon" type="image/png" sizes="32x32" href="./styles/victoriaclassic/theme/images/favicon-32.png?assets_version={T_ASSETS_VERSION}">
+<link rel="shortcut icon" href="./styles/victoriaclassic/theme/images/favicon-32.png?assets_version={T_ASSETS_VERSION}">
+<link rel="apple-touch-icon" sizes="180x180" href="./styles/victoriaclassic/theme/images/favicon-180.png?assets_version={T_ASSETS_VERSION}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -715,7 +719,243 @@ body#phpbb #search-box.search-header {
 	}
 }
 </style>
+<script>
+(function () {
+	var storageKey = 'vpark-theme';
+	var allowed = {
+		'default': true,
+		'system': true,
+		'dark': true,
+		'light': true,
+		'carnaby': true,
+		'clinic': true,
+		'inside-suitcase-day': true,
+		'lighthouse-hill': true,
+		'login-scene': true,
+		'secession-building': true,
+		'ring-road': true,
+		'jazz-age': true,
+		'zhu-rooftops': true,
+		'zhu-street': true,
+		'paris-streets': true
+	};
+	var aliases = {
+		'conservatory': 'inside-suitcase-day',
+		'theatre-night': 'login-scene',
+		'vintage-city': 'paris-streets',
+		'rainy-street': 'carnaby',
+		'neon-city': 'jazz-age',
+		'old-tram': 'ring-road',
+		'museum-rain': 'secession-building',
+		'studio': 'clinic',
+		'chinese-rooftops': 'zhu-rooftops',
+		'old-chinese-street': 'zhu-street'
+	};
+	var root = document.documentElement;
+	var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+	var normalizeChoice = function (value) {
+		return aliases[value] || value;
+	};
+
+	var readStored = function () {
+		try {
+			var stored = window.localStorage ? window.localStorage.getItem(storageKey) : null;
+			var value = normalizeChoice(stored);
+			if (value !== stored && allowed[value]) {
+				writeStored(value);
+			}
+			return allowed[value] ? value : 'default';
+		} catch (error) {
+			return 'default';
+		}
+	};
+
+	var writeStored = function (value) {
+		try {
+			if (window.localStorage) {
+				window.localStorage.setItem(storageKey, value);
+			}
+		} catch (error) {}
+	};
+
+	var resolvedTheme = function (choice) {
+		if (choice === 'system') {
+			return media && media.matches ? 'dark' : 'light';
+		}
+		return choice;
+	};
+
+	var notify = function (choice, effective) {
+		try {
+			window.dispatchEvent(new CustomEvent('vpark-theme-change', {
+				detail: { choice: choice, effective: effective }
+			}));
+		} catch (error) {}
+	};
+
+	var applyTheme = function (choice, persist) {
+		choice = normalizeChoice(choice);
+		if (!allowed[choice]) {
+			choice = 'default';
+		}
+		var effective = resolvedTheme(choice);
+		root.setAttribute('data-vpark-theme-choice', choice);
+		root.setAttribute('data-vpark-theme', effective);
+		if (effective === 'default') {
+			root.style.removeProperty('color-scheme');
+		} else {
+			root.style.colorScheme = effective === 'light' ? 'light' : 'dark';
+		}
+		if (persist) {
+			writeStored(choice);
+		}
+		notify(choice, effective);
+	};
+
+	window.vparkTheme = {
+		allowed: allowed,
+		key: storageKey,
+		getChoice: readStored,
+		apply: applyTheme
+	};
+
+	applyTheme(readStored(), false);
+
+	if (media) {
+		var refreshSystem = function () {
+			if (readStored() === 'system') {
+				applyTheme('system', false);
+			}
+		};
+		if (media.addEventListener) {
+			media.addEventListener('change', refreshSystem);
+		} else if (media.addListener) {
+			media.addListener(refreshSystem);
+		}
+	}
+})();
+</script>
 <link href="./ext/vpark/glue/styles/all/theme/vpark_portal.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet">
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	var selector = document.querySelector('[data-vpark-theme-selector]');
+	var api = window.vparkTheme;
+	if (!selector || !api) {
+		return;
+	}
+
+	var button = selector.querySelector('.vpark-theme-selector__button');
+	var menu = selector.querySelector('.vpark-theme-selector__menu');
+	var label = selector.querySelector('[data-vpark-theme-current]');
+	var options = Array.prototype.slice.call(selector.querySelectorAll('[data-vpark-theme-option]'));
+	if (!button || !menu || !options.length) {
+		return;
+	}
+
+	var selectedIndex = function () {
+		var choice = api.getChoice();
+		var index = options.findIndex(function (option) {
+			return option.dataset.vparkThemeOption === choice;
+		});
+		return index >= 0 ? index : 0;
+	};
+
+	var sync = function () {
+		var choice = api.getChoice();
+		options.forEach(function (option) {
+			var isSelected = option.dataset.vparkThemeOption === choice;
+			option.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+			option.tabIndex = isSelected ? 0 : -1;
+			if (isSelected && label) {
+				label.textContent = option.dataset.vparkThemeLabel || option.textContent.trim();
+			}
+		});
+	};
+
+	var closeMenu = function (restoreFocus) {
+		menu.hidden = true;
+		selector.classList.remove('is-open');
+		button.setAttribute('aria-expanded', 'false');
+		if (restoreFocus) {
+			button.focus();
+		}
+	};
+
+	var openMenu = function (focusOption) {
+		menu.hidden = false;
+		selector.classList.add('is-open');
+		button.setAttribute('aria-expanded', 'true');
+		if (focusOption) {
+			options[selectedIndex()].focus();
+		}
+	};
+
+	var chooseTheme = function (option) {
+		var value = option.dataset.vparkThemeOption;
+		api.apply(value, true);
+		sync();
+		closeMenu(true);
+	};
+
+	button.addEventListener('click', function () {
+		if (menu.hidden) {
+			openMenu(false);
+		} else {
+			closeMenu(false);
+		}
+	});
+
+	button.addEventListener('keydown', function (event) {
+		if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			openMenu(true);
+		} else if (event.key === 'Escape') {
+			closeMenu(false);
+		}
+	});
+
+	options.forEach(function (option, index) {
+		option.addEventListener('click', function () {
+			chooseTheme(option);
+		});
+
+		option.addEventListener('keydown', function (event) {
+			var nextIndex = index;
+			if (event.key === 'ArrowDown') {
+				nextIndex = (index + 1) % options.length;
+			} else if (event.key === 'ArrowUp') {
+				nextIndex = (index - 1 + options.length) % options.length;
+			} else if (event.key === 'Home') {
+				nextIndex = 0;
+			} else if (event.key === 'End') {
+				nextIndex = options.length - 1;
+			} else if (event.key === 'Enter' || event.key === ' ') {
+				event.preventDefault();
+				chooseTheme(option);
+				return;
+			} else if (event.key === 'Escape') {
+				event.preventDefault();
+				closeMenu(true);
+				return;
+			} else {
+				return;
+			}
+			event.preventDefault();
+			options[nextIndex].focus();
+		});
+	});
+
+	document.addEventListener('click', function (event) {
+		if (!selector.contains(event.target)) {
+			closeMenu(false);
+		}
+	});
+
+	window.addEventListener('vpark-theme-change', sync);
+	sync();
+});
+</script>
 {% if S_VPARK_INDEX_PAGE %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
